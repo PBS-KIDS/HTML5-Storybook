@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    	<title>Storybook Example</title>
+    	
+    	<!-- Hide UI elements such as URL bar and bottom bar when iOS is on homescreen.-->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <!-- Set the iOS status bar color to black. -->
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <!-- Set viewport properties -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        
+        <!-- Main storybook style -->
+        <link media="screen, projection" rel="stylesheet" type="text/css" href="../css/style.css">
+        <!--<link media="screen, projection" rel="stylesheet" type="text/css" href="css/custom.css">-->
+        
+        <!-- Custom fonts -->
+        <link href="http://fonts.googleapis.com/css?family=Droid+Serif:regular,italic,bold,bolditalic&amp;v1|Reenie+Beanie" rel="stylesheet" type="text/css">
+        
+    </head>
+ 
+    <body>
+
+	    <!-- Storybook elements will be injected here -->
+        <div id="pbsStorybookContainer"></div>
+    
+        <!-- Load storybook engine js files -->
+        <script src="../js/pbs.js"></script>
+        <script src="../js/eventDispatcher.js"></script>
+        <script src="../js/interaction.js"></script>
+        <script src="../js/resourceLoader.js"></script>
+	    <script src="../js/storybook.js"></script>
+	    <script src="../js/page.js"></script>
+	    <script src="../js/textArea.js"></script>
+	    <script src="../js/view.js"></script>
+        <script src="../js/sprite.js"></script>
+	    
+        <!-- Load Implementation js files-->
+	    <script src="config/book.js"></script>
+	    <script src="config/page-01.js"></script>
+	    <script src="config/page-02.js"></script>
+	    <script src="config/page-03.js"></script>
+	    <script src="config/page-04-and-05.js"></script>
+	    <script src="config/page-06.js"></script>
+	    <script src="config/page-07.js"></script>
+	    <script src="config/page-08.js"></script>
+	    <script src="config/page-09.js"></script>
+	    <script src="config/page-10.js"></script>
+	    <script src="config/page-11.js"></script>
+	    <script src="config/page-12.js"></script>
+	    <script src="config/page-13-and-14.js"></script>
+	    
+	    <script>
+			(function (GLOBAL) {
+			
+				// Create the storybook
+				var storybook = PBS.storybook(GLOBAL, PBS, GLOBAL.document.getElementById("pbsStorybookContainer"), PBS.config);	
+				// Load the storybook resources
+				storybook.load();
+			
+			} (window));
+	    </script>
+
+    </body>
+</html>

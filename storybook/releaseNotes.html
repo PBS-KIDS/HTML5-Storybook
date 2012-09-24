@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>PBS Storybook Engine Release Notes</title>
+		
+		<meta name = "viewport" content = "user-scalable=no, width=960">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		
+		<style type="text/css">
+			*{margin:0;padding:0;-webkit-tap-highlight-color:rgba(0,0,0,0);}
+			body{background-color:#ffffff;margin:40px;}
+			p{margin:20px 0;}
+			h1{margin:20px 0 50px 0;}
+			h2{margin:10px 0 20px 0; padding-top:15px; border-top:1px #000000 solid;}
+			h3{}
+			ul{list-style-position: inside;margin:20px 0;}
+			dl{list-style-position: inside;margin:20px 0;}
+			dt{font-weight:bold;}
+			dd{margin: 10px 0;}
+			.content{margin-left:20px;}
+		</style>
+   
+	</head>
+ 
+	<body>
+	
+	<h1>PBS Storybook Engine Release Notes</h1>
+	
+	<h2>Alpha 0.005</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Animations on a page will now reset to the first frame when navigating to that page.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>Removed deprecated pbsController selector in style.css.</p>
+			<p>Set the height attribute of pbsPageCanvas to 100% to address bug 1 where canvases were stretching beyond the bounds of the page.</p>
+			<p>Setting the contents of the page containers immediately after setting the innerHTML of the containers did not work in IE9 due to a bug. Fixed this by looping through the child nodes of the container removing each child with removeChild. This code can be found in the navigateToPage function of storybook.js.</p>
+			<p>Changed the sprite property name from <var>reset</var> to <var>autoReset</var>.</p>
+			<p>Added a reset method to sprite.js which causes the sprite to go to the first frame of animation.</p>
+			<p>Updated page.js so it will reset all sprites when navigating to a page.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>Page backgrounds no longer stretch beyond the bounds of the page in the y direction on IE9 and Android 2.3. Sprites are still stretching.</p>
+			<p>Page contents are no longer empty on IE9.</p>
+		</div>
+	</article>
+    
+    <h2>Alpha 0.004</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Resources are now all loaded from one resource loader which dispatches the load progress.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>Created resourceLoader.js with two public methods: <var>addToQueue</var> and <var>loadQueue</var>. Updated storybook.js to read in the configuration and convert properties named "url" to resource objects. Also the loadQueue method is invoked via the new public method <var>load</var>.</p>
+			<p>Updated page.js and sprite.js to read the <var>autoStart</var> property of a sprite in the configuration file.  Sprites with an autoStart property set to false will no longer autoplay when navigating to a page.</p>
+			<p>Updated sprite.js to read the <var>reset</var> property of a sprite in the configuration file. Sprites with a reset property set to true will go to the first frame after an animation is complete.</p>
+			
+			<p>Updated sprite.js to read the <var>toggleOnPress</var> property of a sprite in the configuration file. Sprites with a toggleOnPress property set to true will pause animation when playing and resume animation when paused. A public <var>resume</var> method was added to support this new property.</p>
+			
+			<p>Updated the style so the element with the <var>pbsPagesContainer</var> class hides elements outside its width by setting <var>overflow-x</var> to <var>hidden</var>.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>N/A</p>
+		</div>
+	</article>
+    
+    <h2>Alpha 0.003</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Added subtle shadow on pages container.</p>
+			<p>Drag will now navigate between pages if drag distance on a single page is long enough. On the two-page layout the drag direction must go toward the center of the book to navigate: This is by design to model a physical book.</p>
+			<p>Prevent text selection of Text Areas on drag.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>Page objects y positions are now accurate.</p>
+		</div>
+	</article>
+
+    <h2>Alpha 0.002</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Sprites are now available.</p>
+            <p>The game loop will now send updates to the pages allowing for animations.</p>
+            <p>Page backgrounds made changed to sprites so they can be animated.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>N/A</p>
+		</div>
+	</article>
+    
+    <h2>Alpha 0.001</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+        	<p>Text Area objects are now available.</p>
+        	<p>Book responds to viewport size changes.</p>
+        	<p>Book supports single-page and two-page layout depending on aspect ratio</p>
+        	<p>Pages translate when in single-page layout.</p>
+            <p>Page backgrounds can be set.</p>
+            <p>Configuration files are used to populate page objects.</p>
+            <p>Hide URL bar on iPhone and Android.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>N/A</p>
+		</div>
+	</article>
+	
+	</body>
+</html>
