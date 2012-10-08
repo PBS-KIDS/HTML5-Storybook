@@ -7,39 +7,48 @@ html {
 
 body {
 	margin: 0;
-	height: 100%;
 	background-color: #BBB;
+	
+	height: 100%;
 }
+
+/* Engine Container */
 
 #pbsStorybookContainer { 
 	/* Turn off tap highlight in Mobile Safari */
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
 	
+	/* Relative position is required to position the absolute positioned elements */
+	position: relative !important;
+	
+	width: 100%;
 	height: 100%;
 }
+
+/* Background */
 
 #pbsBookWrapper {
-	/*min-height: 100%;*/
-	height: 100%;
-	
 	/* Keep all elements within the wrapper */
 	overflow-x: hidden;
+	
+	width: 100%;
+	height: 100%;
 }
 
-#pbsBookContainer {  
-	height: 100%;
-	
+/* Book */
+
+#pbsBookContainer {
 	/* Animate page transitions */
 	transition: margin-left 0.25s linear;
 	-webkit-transition: margin-left 0.25s linear;
 	-moz-transition: margin-left 0.25s linear;
 	-ms-transition: margin-left 0.25s linear;
+	
+	width: 100%; 
+	height: 100%;
 }
 
 .pbsPagesContainer {
-	width: 100%;
-	height: 100%;
-	
 	/* Represent book depth */
 	border-bottom: 2px #333 solid;
 	
@@ -50,35 +59,49 @@ body {
 	-moz-box-shadow: 0px 1px 6px 1px #000;
 	-webkit-box-shadow: 0px 1px 6px 1px #000;
 	box-shadow: 0px 1px 6px 1px #000;
+	
+	width: 100%;
+	height: 100%;
 }
 
 .pbsPageContainer {
-	width: 50%;
 	height: 100%;
 	float: left;
 }
 
 .pbsPage {
+	/* Relative position is required to position the absolute positioned elements */
+	position: relative !important;
+	
 	width: 100%;
 	height: 100%;
-	position: relative;
-	background-color: #000000;
 }
 
 .pbsPageCanvas {
+	/* Position left page and right page next to each other */
+	float: left;
+	
 	width: 100%;
 	height: 100%;
-	float: left;
+}
+
+.pbsSprite {
+	
 }
 
 .pbsCanvas {
-	position: absolute; 
+	/* Layer the element on top of the page */
+	position: absolute;
 }
 
 .pbsTextArea {
+	/* Layer the element on top of the page */
 	position: absolute;
-	margin: 0;
+	
+	/* Remove the default text cursor */
 	cursor: default;
+	
+	margin: 0;
 	
 	/* Prevent highlighting text on drag */
 	-webkit-touch-callout: none;
@@ -89,29 +112,33 @@ body {
 	user-select: none;
 }
 
-.loadingText {
-	text-align: center;
+/* Page Buttons */
+
+.pbsStorybookNav {
+	/* Relative position is required to position the absolute positioned elements */
+	/*position: relative !important;*/
+	
 	width: 100%;
-	margin-top: 40%;
-	font-size: 40px;
+	height: 100%;
 }
 
-/* Page Buttons */
 .pbsPageButton {
-	position: absolute;
-	width: 50px;
-	height: 50px;
-	background-color: blue;
+	
 }
 
 #pbsPrevPageButton {
-	top: 50%;
-	left: 10px;
-	background: url("../images/prev-page-button.png");
+	
 }
 
 #pbsNextPageButton {
-	top: 50%;
-	right: 10px;
-	background: url("../images/next-page-button.png");
+	
+}
+
+/* Loading */
+
+.loadingText {
+	text-align: center;
+	margin-top: 40%;
+	font-size: 40px;
+	width: 100%;
 }

@@ -3,7 +3,7 @@
 //
 //  Copyright 2012 PBS KIDS Interactive. All Rights Reserved.
 
-PBS.config.pages.push({
+PBS.KIDS.storybook.config.pages.push({
 	content: [
 		{
 			type: "TextArea",
@@ -29,7 +29,7 @@ PBS.config.pages.push({
 	]
 });
 
-PBS.config.pages.push({
+PBS.KIDS.storybook.config.pages.push({
 	background: {
 		url: "images/character-page-2.jpg"
 	},

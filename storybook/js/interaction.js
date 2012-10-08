@@ -3,14 +3,14 @@
 //
 //  Copyright 2012 PBS KIDS Interactive. All Rights Reserved.
 
-PBS.interactionObject = function (GLOBAL, PBS, element) {
+PBS.KIDS.storybook.interactionObject = function (GLOBAL, PBS, element) {
 	
 	"use strict";
 	
-	return PBS.makeInteractionObject(GLOBAL, PBS, PBS.view(PBS, element));
+	return PBS.KIDS.storybook.makeInteractionObject(GLOBAL, PBS, PBS.KIDS.storybook.view(PBS, element));
 };
 
-PBS.makeInteractionObject = function (GLOBAL, PBS, view) {
+PBS.KIDS.storybook.makeInteractionObject = function (GLOBAL, PBS, view) {
 
 	"use strict";
 	
@@ -21,44 +21,55 @@ PBS.makeInteractionObject = function (GLOBAL, PBS, view) {
 		press = function (e) {
 		
 			var loc = {},
-				elementPos = PBS.getElementPosition(element),
+				// Get the position of the element relative to the viewport
+				elementPos = PBS.KIDS.storybook.getElementPosition(element),
+				// Get the position of the touch/click relative to the viewport
 				interaction = e.changedTouches ? e.changedTouches[0] : e;
 				
+			// Set the location of the press relative to the element's registration point
 			loc.x = interaction.clientX - elementPos.x;
 			loc.y = interaction.clientY - elementPos.y;
 			
+			// A press has started
 			pressed = true;
 			
-			// Save the press location
+			// Save the press location to be used as the start position of a drag
 			dragStartLoc = {
 				x: loc.x, 
 				y: loc.y
 			};
 			
-			//PBS.log("touch -> (loc.x: " + loc.x + ", loc.y: "+ loc.y + ") (" + elementPos.x + ", " + elementPos.y + ")");
+			//PBS.KIDS.storybook.log("Press loc -> (" + loc.x + ", "+ loc.y + "). Element loc -> (" + elementPos.x + ", " + elementPos.y + ")", element);
+			//if (console && console.dir) {
+			//	console.dir(element);
+			//}
 			
-			// Dispatch the press event
+			// Dispatch the press event with the position
 			view.dispatchEvent("PRESS", {
 				x: loc.x, 
 				y: loc.y
 			});
 			
+			// Stop iOS from dragging the viewport
 			e.preventDefault();
 		},
 		
 		drag = function (e) {
 		
 			var loc = {},
-				elementPos = PBS.getElementPosition(element),
+				// Get the position of the element relative to the viewport
+				elementPos = PBS.KIDS.storybook.getElementPosition(element),
+				// Get the position of the touch/click relative to the viewport
 				interaction = e.changedTouches ? e.changedTouches[0] : e;
 			
+			// Set the location of the press relative to the element's registration point
 			loc.x = interaction.clientX - elementPos.x;
 			loc.y = interaction.clientY - elementPos.y;
 			
+			// If a press has started and not cancelled
 			if (pressed) {
-				//PBS.log("drag -> (loc.x: " + loc.x + ", loc.y: "+ loc.y + ")");
-				
-				// Dispatch the drag event
+
+				// Dispatch the drag event with the position, start position, and length of the drag
 				view.dispatchEvent("DRAG", {
 					x: loc.x, 
 					y: loc.y,
@@ -66,7 +77,7 @@ PBS.makeInteractionObject = function (GLOBAL, PBS, view) {
 					startY: dragStartLoc.y,
 					distanceX: GLOBAL.Math.abs(loc.x - dragStartLoc.x),
 					distanceY: GLOBAL.Math.abs(loc.y - dragStartLoc.y),
-					distance: PBS.distance({
+					distance: PBS.KIDS.storybook.distance({
 						x: loc.x,
 						y: loc.y
 					}, {
@@ -78,17 +89,22 @@ PBS.makeInteractionObject = function (GLOBAL, PBS, view) {
 		},
 		
 		release = function (e) {
+		
+			// End the press
 			pressed = false;
 			
 			view.dispatchEvent("RELEASE");
 		},
 		
 		cancel = function (e) {
+		
+			// End the press
 			pressed = false;
 			
 			view.dispatchEvent("CANCEL");
 		};
 		
+	// Make cancelling the press public
 	view.cancelInteraction = function () {
 		cancel();
 	};

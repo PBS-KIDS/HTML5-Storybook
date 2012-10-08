@@ -3,36 +3,45 @@
 //
 //  Copyright 2012 PBS KIDS Interactive. All Rights Reserved.
 
-PBS.config.pages.push({
+PBS.KIDS.storybook.config.pages.push({
 	background: {
-		numFrames: 5,
-		frameDelay: 10,
-		loop: false,
-		url: "images/sunrise.jpg",
-		playOnPress: true
+		url: "images/desert-left.png"
 	},
 	content: [
 		{
 			type: "TextArea",
-			x: 15,
-			y: 60,
-			width: 70,
-			align: "center",
-			color: "#222222",
-			size: 32,
-			font: "Droid Serif",
-			text: "Page backgrounds are sprites so they can be animated too."
-		},
-		{
-			type: "TextArea",
-			x: 5,
-			y: 80,
-			width: 90,
+			x: 0,
+			y: 95,
 			align: "center",
 			color: "#222222",
 			size: 18,
 			font: "Droid Serif",
-			text: "Since backgrounds are large animating them should be used sparingly."
+			text: "Page 15"
+		},
+		{
+			type: "Sprite",
+			x: 20,
+			y: 50,
+			url: "images/apple-cart.png"
+		}
+	]
+});
+
+PBS.KIDS.storybook.config.pages.push({
+	background: {
+		color: "#f1fd6b"
+	},
+	content: [
+		{
+			type: "TextArea",
+			x: 20,
+			y: 45,
+			width: 65,
+			align: "center",
+			color: "#222222",
+			size: 32,
+			font: "Droid Serif",
+			text: "A page background color can be specified instead of an image."
 		},
 		{
 			type: "TextArea",
@@ -42,7 +51,7 @@ PBS.config.pages.push({
 			color: "#222222",
 			size: 18,
 			font: "Droid Serif",
-			text: "Page 10"
+			text: "Page 16"
 		}
 	]
 });

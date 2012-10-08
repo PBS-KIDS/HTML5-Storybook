@@ -3,7 +3,7 @@
 //
 //  Copyright 2012 PBS KIDS Interactive. All Rights Reserved.
 
-PBS.config.pages.push({
+PBS.KIDS.storybook.config.pages.push({
 	background: {
 		url: "images/trees-right.jpg",
 	},

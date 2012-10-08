@@ -28,6 +28,130 @@
 	
 	<h1>PBS Storybook Engine Release Notes</h1>
 	
+	<h2>Alpha 0.009</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Supports an odd number of pages.</p>
+			<p>Supports even and odd background definitions (image or color) in the book config.</p>
+			<p>Centered the book when closed and showing the cover.</p>
+			<p>Page navigation button size can now be set in the book config.</p>
+			<p>Storybook container background color or image an now be set in the config.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>Added logic in the init function in page.js to add a blank page if the number of pages in the config was odd.</p>
+			<p>Page.js init function now reads page background properties in the following order: page background image, page background color, odd/even default background image, odd/even default background color, default background image, default image color.</p>
+			<p>Renamed storybook.js to book.js.</p>
+			<p>Changed namespace from PBS to PBS.KIDS.storybook</p>
+			<p>Updated sprite.js so the CSS height of the sprite is set as a percentage of the parent container if  a parent container is specified.</p>
+			<p>Added comments throughout the engine js files.</p>
+			<p>Book.js init function now sets the background color or image of the bookWrapperElement if the config properties are set.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>Sprites no longer stretch beyond the bounds of the page in the y direction on IE9 and Android 2.3.</p>
+		</div>
+	</article>
+	
+	<h2>Alpha 0.008</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Sprites can now be aligned left, right, top, and bottom by setting the <var>horizontalAlign</var> and <var>verticalAlign</var> properties of the sprite in the config.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>Changed the storybook engine css filename from "style.css" to "engine.css".</p>
+			<p>Font scaling now handled by setting the fontSize of the storybookContainerElement element instead of the body element.</p>
+			<p>Sprite.js now reads in the <var>horizontalAlign</var> and <var>verticalAlign</var> properties through the options parameter and sets private variables with the same names. If the sprite encounters the string "RIGHT" the x value will be set to the CSS right property to x, otherwise x will be set to the CSS left property. If the sprite encounters the string "BOTTOM" the x value will be set to the CSS bottom property to y, otherwise y will be set to the CSS top property.</p>
+			<p>Added a <var>parentElement</var> parameter to the createCanvas utility function.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>Moved the page navigation buttons inside the storybook container instead of the viewport.</p>
+		</div>
+	</article>
+	
+	<h2>Alpha 0.007</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>A cover can now be specified in the configuration file.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>Combined the two "pbsPage" section elements into one element in the markup.</p>
+            <p>Added a new variable in storybook.js called <var>cover</var> which will store the cover object. The cover is a PBS.page object. Also added listeners to detect drags to navigate the cover just like a page.</p>
+            <p>Changed the function name "windowSizeChange" to "updateLayout" to be better describe its use.</p>
+            <p>Removed a call to navigateToPage function inside of <var>updateLayout</var>. It was being called because there were some positioning that was being done when changing pages that also needed to happen when the viewport changed size.  The positioning code was moved into an <var>updatePosition</var> function which can now be invoked by either function.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>N/A</p>
+		</div>
+	</article>
+	
+	<h2>Alpha 0.006</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Page backgrounds can now be set to a color instead of an image.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>Updated sprite.js so an image is no longer required. If no resource is specified the sprite will draw a rectangle on the canvas with the color specified by the color parameter.</p>
+			<p>Updated page.js so the page background will set based on the configuration priorities: page background image, page background color, default page image, default page color.</p>
+			<p>Updated the public previousPage method of page.js which was going back the incorrect number of pages based on the page index for landscape orientations.</p>
+			<p>Updated markup to link to a css file for fonts so @font-face can be used to point to a ttf and svg version of custom fonts.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>The previous page button now works the first time even if the start page is even (Bug 2).</p>
+			<p>Custom fonts now display on iOS (Bug 5).</p>
+		</div>
+	</article>
+	
 	<h2>Alpha 0.005</h2>
 	
 	<article>

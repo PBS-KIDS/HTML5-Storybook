@@ -3,7 +3,17 @@
 //
 //  Copyright 2012 PBS KIDS Interactive. All Rights Reserved.
 
-var PBS = (function (GLOBAL) {
+var PBS;
+
+if (!PBS) {
+	PBS = {};
+}
+
+if (!PBS.KIDS) {
+	PBS.KIDS = {};
+}
+
+PBS.KIDS.storybook = (function (GLOBAL) {
 
 	"use strict";
 	
@@ -35,19 +45,21 @@ var PBS = (function (GLOBAL) {
 	
 	// Creates a new canvas element and returns its context
 	//
-	// Options:
+	// parentElement - the element to append the canvas. This parameter can be null.
+	//
+	// options - an object to hold options such as dimensions.
 	//     id: element id
 	//     class: elements class(es)
 	//     width: element width
 	//     height: element height
-	//     parentElement: canvas will be appended to this element
 	//     
 	// Example usage:
-	//     ctx = PBS.createCanvas({
+	//     ctx = PBS.createCanvas(containerElement, {
 	//         id: "stageCanvas",
-	//         parentElement: containerElement
+	//         width: 100,
+	//         height: 200
 	//     }
-	that.createCanvas = function (options) {
+	that.createCanvas = function (parentElement, options) {
 		
 		var canvasElement = GLOBAL.document.createElement('canvas');
 		
@@ -67,15 +79,16 @@ var PBS = (function (GLOBAL) {
 			canvasElement.height = options.height;
 		}
 		
-		if (options.parentElement) {
-			options.parentElement.appendChild(canvasElement);
+		// Append the canvas to the parent element (if specified)
+		if (parentElement) {
+			parentElement.appendChild(canvasElement);
 		}
 		
 		// Return the canvas CONTEXT not the canvas element
 		return canvasElement.getContext("2d");
 	};
 	
-	// Returns a position object representing the element by adding the parent offsets recursively
+	// Returns a position object relative to the viewport representing the element by adding the parent offsets recursively
 	//
 	// Example usage:
 	//     elementPos = getElementPosition(div);
@@ -88,7 +101,9 @@ var PBS = (function (GLOBAL) {
            };
            
        if (element.offsetParent) {
+       	   // Recursively get the position of the current element's parent
            parentOffset = that.getElementPosition(element.offsetParent);
+           // Adjust the elements position based on the position of the parent element
            pos.x += parentOffset.x;
            pos.y += parentOffset.y;
        }

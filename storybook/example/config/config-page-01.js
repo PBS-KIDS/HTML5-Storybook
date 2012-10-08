@@ -3,30 +3,18 @@
 //
 //  Copyright 2012 PBS KIDS Interactive. All Rights Reserved.
 
-PBS.config.pages.push({
-	background: {
-		url: "images/bounce-page.jpg"
-	},
+PBS.KIDS.storybook.config.pages.push({
 	content: [
 		{
 			type: "TextArea",
-			x: 15,
-			y: 40,
-			width: 70,
+			x: 10,
+			y: 35,
+			width: 80,
 			align: "center",
 			color: "#222222",
-			size: 32,
+			size: 28,
 			font: "Droid Serif",
-			text: "<strong>Sprites can be animated.</strong>"
-		},
-		{
-			type: "Sprite",
-			x: 48,
-			y: 66,
-			numFrames: 14,
-			frameDelay: 4,
-			loop: true,
-			url: "images/ball-bounce.png"
+			text: "This storybook will give examples of the functionality of the Storybook Engine. See the configuration files in the config folder to see how the examples were implemented."
 		},
 		{
 			type: "TextArea",
@@ -36,7 +24,7 @@ PBS.config.pages.push({
 			color: "#222222",
 			size: 18,
 			font: "Droid Serif",
-			text: "Page 8"
+			text: "Page 1"
 		}
 	]
 });

@@ -3,7 +3,7 @@
 //
 //  Copyright 2012 PBS KIDS Interactive. All Rights Reserved.
 
-PBS.config.pages.push({
+PBS.KIDS.storybook.config.pages.push({
 	background: {
 		url: "images/orchard-left.png"
 	},
@@ -92,7 +92,7 @@ PBS.config.pages.push({
 			frameDelay: 5,
 			playOnPress: true,
 			autoStart: false,
-			autoReset: true,
+			autoReset: false,
 			url: "images/water-creature-hide-animation.png"
 		},
 		{
@@ -104,7 +104,7 @@ PBS.config.pages.push({
 	]
 });
 
-PBS.config.pages.push({
+PBS.KIDS.storybook.config.pages.push({
 	background: {
 		url: "images/orchard-right.png"
 	},

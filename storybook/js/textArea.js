@@ -3,11 +3,11 @@
 //
 //  Copyright 2012 PBS KIDS Interactive. All Rights Reserved.
 
-PBS.textArea = function (GLOBAL, PBS, config) {
+PBS.KIDS.storybook.textArea = function (GLOBAL, PBS, config) {
 	
 	"use strict";
 	
-	var that = PBS.view(PBS, GLOBAL.document.createElement("p")),
+	var that = PBS.KIDS.storybook.view(PBS, GLOBAL.document.createElement("p")),
 		element = that.getElement(),
 		dirty = true;
 	

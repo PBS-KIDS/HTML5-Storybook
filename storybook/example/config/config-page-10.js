@@ -3,38 +3,36 @@
 //
 //  Copyright 2012 PBS KIDS Interactive. All Rights Reserved.
 
-PBS.config.pages.push({
+PBS.KIDS.storybook.config.pages.push({
 	background: {
-		url: "images/green-hill.jpg"
+		numFrames: 5,
+		frameDelay: 10,
+		loop: false,
+		url: "images/sunrise.jpg",
+		playOnPress: true
 	},
 	content: [
 		{
 			type: "TextArea",
 			x: 15,
-			y: 50,
+			y: 60,
 			width: 70,
 			align: "center",
 			color: "#222222",
 			size: 32,
 			font: "Droid Serif",
-			text: "Sprites are drawn on top of the page background."
+			text: "Page backgrounds are sprites so they can be animated too."
 		},
 		{
 			type: "TextArea",
-			x: 15,
-			y: 65,
-			width: 70,
+			x: 5,
+			y: 80,
+			width: 90,
 			align: "center",
 			color: "#222222",
 			size: 18,
 			font: "Droid Serif",
-			text: "Use Sprites instead of including on the page background for improved performance when using the same sprite or page background on multiple pages."
-		},
-		{
-			type: "Sprite",
-			x: 40,
-			y: 13,
-			url: "images/char-jump.png"
+			text: "Since backgrounds are large animating them should be used sparingly."
 		},
 		{
 			type: "TextArea",
@@ -44,7 +42,7 @@ PBS.config.pages.push({
 			color: "#222222",
 			size: 18,
 			font: "Droid Serif",
-			text: "Page 7"
+			text: "Page 10"
 		}
 	]
 });
