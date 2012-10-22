@@ -28,6 +28,71 @@
 	
 	<h1>PBS Storybook Engine Release Notes</h1>
 	
+	<h2>Alpha 0.011</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Sprites now support "EaseIn" and "EaseOut" via the <var>easing</var> property in the config.</p>
+			<p>Sprite positions can now be specified in pixels (e.g. x: "100px") in the config.</p>
+			<p>Text Area positions can now be specified in pixels (e.g. x: "100px") in the config.</p>
+			<p>Text Area widths can now be specified in pixels (e.g. x: "100px") in the config.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>Moved the engine CSS and JavaScript folders into a new "engine" folder.</p>
+			<p>Refactored the update method of sprite.js to use a new <var>updateIndex</var> variable for tracking the current progress of the animation.</p>
+			<p>Added a private <var>applyEasing</var> function to add support for easing animations in and out.</p>
+			<p>Added regular expressions to sprite.js and textArea.js to determine of x and y values specified in the config with "px" and set the location of the sprite to a percentage based on the parent dimensions.</p>
+			<p>Removed the clearRect method from the render method of sprite.js which crashes native browser in Droid Samsung Gt-P3113.</p>
+			<p>Moved logic for setting the positions and size of the element of an page element from sprite.js and textArea.js into view.js which both sprites and text areas inherit from.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>Animations no longer crash in native browser in Droid Samsung Gt-P3113.</p>
+		</div>
+	</article>
+	
+	<h2>Alpha 0.010</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Unsupported HTML tags (everything except b, i and em) are now removed from text areas.</p>
+			<p>Custom tags (color, size, font) are now supported in text areas.</p>
+			<p>Text Areas can now be assigned multiple paragraphs.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>Removed the options parameter from the book object since it was not being used.</p>
+			<p>Added a css height declaration for the book container in the <var>updateLayout</var> function to extend the book background all the way to the bottom.</p>
+			<p>Two functions were added to textArea.js to remove HTML tags except "b", "i", "em" and "br" and support the custom tags: "color", "size" and "font".</p>
+			<p>The textArea object now checks the type of the text property in the config. If it is an array then it will put each item into a separate paragraph within the text area div.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>N/A</p>
+		</div>
+	</article>
+	
 	<h2>Alpha 0.009</h2>
 	
 	<article>

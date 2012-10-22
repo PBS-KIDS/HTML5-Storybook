@@ -14,7 +14,10 @@ PBS.KIDS.storybook.config.pages.push({
 			color: "#222222",
 			size: 24,
 			font: "Droid Serif",
-			text: "Text in a Text Area support HTML elements including: <b>bold</b> &lt;b&gt;, <i>italics</i> &lt;i&gt;, <u>underline</u> &lt;u&gt; line... <br /><br />breaks &lt;br /&gt;, <em>emphasis</em> &lt;em&gt;, <strong>strong</strong> &lt;strong&gt;, and <small>small</small> &lt;small&gt;."
+			text: [
+				"Text in a Text Area supports HTML elements including: <b>bold</b>, <i>italics</i> and <em>emphasis</em>.",
+				"Additional supported tags are: <color=#22aa22>color</color>, <size=2>size</size> and <font='Reenie Beanie'>font</font>."
+			]
 		},
 		{
 			type: "TextArea",
@@ -41,18 +44,18 @@ PBS.KIDS.storybook.config.pages.push({
 			width: 80,
 			align: "left",
 			color: "#222222",
-			size: 24,
+			size: 18,
 			font: "Droid Serif",
-			text: "A background image can be assigned for a page. <small>If an background image is not found in the page configuration the engine will implement the default background image in the book configuration</small>."
+			text: "<size=1.4>A background image can be assigned for a page.</size> If an background image is not found in the page configuration the engine will implement the default background image in the book configuration."
 		},
 		{
 			type: "TextArea",
-			x: 20,
+			x: 10,
 			y: 75,
-			width: 60,
+			width: 70,
 			align: "center",
 			color: "#222222",
-			size: 14,
+			size: 18,
 			font: "Droid Serif",
 			text: "If a background image is not specified the page container will display the background color in the page or book config."
 		},

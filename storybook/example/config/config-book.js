@@ -7,7 +7,6 @@ PBS.KIDS.storybook.config = {
 	background: {
 		color: "#43ff92",
 		url: "images/circles-background.png"
-		
 	},
 	book: {
 		font: "Georgia",

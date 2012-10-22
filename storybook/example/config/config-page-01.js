@@ -8,13 +8,13 @@ PBS.KIDS.storybook.config.pages.push({
 		{
 			type: "TextArea",
 			x: 10,
-			y: 35,
+			y: 30,
 			width: 80,
-			align: "center",
+			align: "left",
 			color: "#222222",
 			size: 28,
 			font: "Droid Serif",
-			text: "This storybook will give examples of the functionality of the Storybook Engine. See the configuration files in the config folder to see how the examples were implemented."
+			text: "<font='Reenie Beanie'><size=6>T</size></font>his storybook will give examples of the functionality of the Storybook Engine. See the configuration files in the config folder to see how the examples were implemented."
 		},
 		{
 			type: "TextArea",

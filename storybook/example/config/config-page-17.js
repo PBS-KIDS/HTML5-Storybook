@@ -29,7 +29,7 @@ PBS.KIDS.storybook.config.pages.push({
 			color: "#dddddd",
 			size: 40,
 			font: "Droid Serif",
-			text: "This is a last page<br />specified in the config."
+			text: "This is a last page specified in the config."
 		},
 		{
 			type: "TextArea",
