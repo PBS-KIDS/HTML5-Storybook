@@ -15,6 +15,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 		element,
 		textAreaArray = [],
 		spriteArray = [],
+		cyclerArray = [],
 		contentArray = [],
 		dirty = true,
 		pageView,
@@ -33,7 +34,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 	// Initialize the page
 	that.init = function () {
 	
-		var spec, i, curTextArea, curSprite;
+		var spec, i, curTextArea, curSprite, curCycler;
 	
 		// A configuration object is required
 		if (config === undefined) {
@@ -49,6 +50,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 		
 		// Create the page container
 		element = GLOBAL.document.createElement("section");
+		element.id = "pbsPage" + pageNum;
 		element.className = "pbsPage";
 		
 		// Create the page
@@ -136,6 +138,27 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 					curSprite = PBS.KIDS.storybook.makeInteractionObject(GLOBAL, PBS, curSprite);
 					spriteArray.push(curSprite);
 					contentArray.push(curSprite);
+					
+					// Set the play after delay property if its set
+					if (config.content[i].playAfterDelay > 0) {
+						curSprite.playAfterDelay = config.content[i].playAfterDelay;
+					}
+					break;
+					
+				case "Cycler":
+	
+					config.content[i].parentElement = element;
+					config.content[i].parentWidth = width;
+					config.content[i].parentHeight = height;
+					
+					curCycler = PBS.KIDS.storybook.cycler(GLOBAL, PBS, config.content[i]);
+					contentArray.push(curCycler);
+					cyclerArray.push(curCycler);
+					
+					// Set the play after delay property if its set
+					if (config.content[i].playAfterDelay > 0) {
+						curCycler.playAfterDelay = config.content[i].playAfterDelay;
+					}
 					break;
 				}
 			}
@@ -163,13 +186,30 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 			backgroundSprite.play();
 		}
 		 
-		// For each item on the page
+		// For each sprite on the page
 		for (i = 0; i < spriteArray.length; i += 1) {
 		
 			if (spriteArray[i].autoStart === true) {
 				spriteArray[i].play();
 			} else {
 				spriteArray[i].reset();
+			}
+			
+			if (spriteArray[i].playAfterDelay > 0) {
+				GLOBAL.setTimeout(spriteArray[i].play, GLOBAL.parseInt(spriteArray[i].playAfterDelay, 10) * 1000);
+			}
+		}
+		
+		// For each cycler on the page
+		for (i = 0; i < cyclerArray.length; i += 1) {	
+			if (cyclerArray[i].autoStart === true) {
+				cyclerArray[i].play();
+			} else {
+				cyclerArray[i].reset();
+			}
+			
+			if (cyclerArray[i].playAfterDelay > 0) {
+				GLOBAL.setTimeout(cyclerArray[i].play, GLOBAL.parseInt(cyclerArray[i].playAfterDelay, 10) * 1000);
 			}
 		}
 	};

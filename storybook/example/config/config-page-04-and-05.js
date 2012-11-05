@@ -13,6 +13,7 @@ PBS.KIDS.storybook.config.pages.push({
 			align: "left",
 			color: "#222222",
 			size: 24,
+			paragraphSpacing: "40px",
 			font: "Droid Serif",
 			text: [
 				"Text in a Text Area supports HTML elements including: <b>bold</b>, <i>italics</i> and <em>emphasis</em>.",

@@ -77,7 +77,7 @@ PBS.KIDS.storybook.textArea = function (GLOBAL, PBS, options) {
 				element.style.fontSize = (options.size !== undefined) ? options.size + "em" : "1em";
 				// Set the line height to the options font size to normalize inline font sizes
 				element.style.lineHeight = "120%";
-		
+				
 				// Set text color if specified
 				if (options.color !== undefined) {
 					element.style.color = options.color;
@@ -114,17 +114,23 @@ PBS.KIDS.storybook.textArea = function (GLOBAL, PBS, options) {
 					paragraphContent[i] = paragraphContent[i].replace(/\[font=(.*?)\](.*?)\[\/font\]/gi, "<span style=\"font-family:$1\">$2</span>");
 		
 					if (textArr.length === 1) {
+
 						// Set the contents of the paragraph
 						element.innerHTML = paragraphContent[i];
 					} else {
 						// Create the paragraph element
 						paragraphElements[i] = GLOBAL.document.createElement("p");
+						
+						// Set paragraph margin if specified
+						if (that.paragraphSpacing !== null) {
+							paragraphElements[i].style.marginBottom = (that.paragraphSpacing.toString().toUpperCase().indexOf("PX") !== -1) ? that.paragraphSpacing : that.paragraphSpacing + "%";
+						}
+						
 						// Add the paragraph element to the text area
 						element.appendChild(paragraphElements[i]);
 						// Set the contents of the paragraph
 						paragraphElements[i].innerHTML = paragraphContent[i];
 					}
-					
 				}
 			}
 		};
@@ -151,6 +157,7 @@ PBS.KIDS.storybook.textArea = function (GLOBAL, PBS, options) {
 	that.verticalAlign = (options && options.verticalAlign !== undefined) ? options.verticalAlign.toUpperCase() : "TOP";
 	that.parentWidth = options.parentWidth;
 	that.parentHeight = options.parentHeight;
+	that.paragraphSpacing = (options.paragraphSpacing !== undefined) ? options.paragraphSpacing : null;
 
 	// Update the text area
 	that.update = function () {

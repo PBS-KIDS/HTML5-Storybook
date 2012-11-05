@@ -25,6 +25,9 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		nextPageButtonSprite,
 		cover,
 		pages = [],
+		bookMargin,
+		bookWidth,
+		minBookMargin = 0.02,
 		// Elements
 		bookWrapperElement,
 		bookContainerElement,
@@ -73,65 +76,68 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 			}
 		},
 		
-		/*// Based on Paul Irish's requestAnimationFrame polyfill 
-		// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-		requestAnimFrame = (function() {
-			
-			// Return requestAnimationFrame function
-			return GLOBAL.requestAnimationFrame || GLOBAL.webkitRequestAnimationFrame || GLOBAL.mozRequestAnimationFrame || GLOBAL.oRequestAnimationFrame || GLOBAL.msRequestAnimationFrame || function (callback) {
-				GLOBAL.setTimeout(callback, 1000 / 60);
-			};
-		})(),*/
-			
-		// Handles changes to the layout
-		updateLayout = function () {
-
-			var viewportWidth = window.innerWidth,
-				viewportHeight = window.innerHeight,
-				i;
-				
-			// Update the current orientation
-			curOrientation = (viewportHeight > viewportWidth) ? "PORTRAIT" : "LANDSCAPE";
-
-			bookContainerElement.style.margin = "2%";
+		fitWidth = function (containerWidth) {
+console.log("fitWidth: " + containerWidth);		
+	
 			// Singe-Page layout
 			if (curOrientation === "PORTRAIT") {
 				// Scale the container element to zoom on one page
-				bookContainerElement.style.width = "180%";
+				containerWidth *= 1.8;
+				bookContainerElement.style.width = containerWidth + "px";
+
 			// Two-Page layout
 			} else {
-				// Scale the container element to 100% minus the margin (which will be two times the margin)
-				bookContainerElement.style.width = "100" - bookContainerElement.style.margin.replace(/\%|pt/gi, "") * 2 + "%";
-				bookContainerElement.style.height = "100" - bookContainerElement.style.margin.replace(/\%|pt/gi, "") * 2 + "%";
+				// Set the book to the container width
+				bookContainerElement.style.width = containerWidth + "px";
 			}
 			
+			bookMargin = containerWidth * minBookMargin;
+			
+			pagesContainerElement.style.width = (containerWidth - bookMargin * 2) + "px";
+			
 			// Determine the page dimensions based on the actual width of one of the page elements
-			pageElementWidth = rightPageContainerElement.scrollWidth;
+			pageElementWidth = rightPageContainerElement.offsetWidth;
 			// Calculate the page height to be proportional to the actual page width
 			pageElementHeight = pageElementWidth / bookConfig.pageWidth * bookConfig.pageHeight;
 			
-			// Set the height of the pages container
-			pagesContainerElement.style.height = pageElementHeight + "px";
+			// Set the height of the book
+			bookContainerElement.style.margin = bookMargin + "px";
+			bookContainerElement.style.height = pageElementHeight - bookMargin * 2 + "px";
+			pagesContainerElement.style.height = pageElementHeight - bookMargin * 2 + "px";
+		},
+		
+		fitHeight = function (storybookContainerHeight) {
+console.log("fitHeight: " + storybookContainerHeight);		
+		
+			pagesContainerElement.style.height = storybookContainerHeight - bookMargin * 2 + "px";
+			bookContainerElement.style.height = storybookContainerHeight - bookMargin * 2 + "px";		
 			
-			// Code to scale the book vertically
-			/*console.log("bookContainerElement.scrollHeight: " + bookContainerElement.scrollHeight + " ?> viewportHeight: " + viewportHeight);
-			console.log("bookContainerElement.margin: " + bookContainerElement.offsetTop);
-			if (true || bookContainerElement.scrollHeight > viewportHeight) {
+			pageElementWidth = pagesContainerElement.offsetHeight / bookConfig.pageHeight * bookConfig.pageWidth;
+
+			// If the current page is not the cover then the width is times two (pages)
+			bookWidth = (curPageIndex === -1) ? pageElementWidth : pageElementWidth * 2;
+
+			// Set the width of the book
+			pagesContainerElement.style.width = bookWidth - bookMargin * 2 + "px";
+			bookContainerElement.style.width = bookWidth - bookMargin * 2 + "px";
+		},
 			
-			console.log("Scale Height");
+		// Handles changes to the layout
+		updateLayout = function () {
+		
+			// Update the current orientation
+			curOrientation = (storybookContainerElement.scrollHeight > storybookContainerElement.scrollWidth) ? "PORTRAIT" : "LANDSCAPE";
 			
-				bookContainerElement.style.height = 100 + "%";
+			fitWidth(storybookContainerElement.offsetWidth);
+			
+			// If the book is larger than the container
+			if (bookContainerElement.offsetHeight > storybookContainerElement.offsetHeight) {	
+				fitHeight(storybookContainerElement.offsetHeight);
 				
-				pagesContainerElement.style.height = 100 + "%";
-				pagesContainerElement.style.height = bookContainerElement.scrollHeight - bookContainerElement.offsetTop * 2 + "px";
-				
-				pageElementWidth = (pagesContainerElement.scrollHeight) / bookConfig.pageHeight * bookConfig.pageWidth;
-				pagesContainerElement.style.width = pageElementWidth * 2 + "px";
-				pagesContainerElement.style.margin = "auto";
-			} else {
-				pagesContainerElement.style.width = "";
-				pagesContainerElement.style.margin = "";
-			}*/
+				if (pagesContainerElement.offsetWidth > storybookContainerElement.offsetWidth) {	
+					fitWidth(storybookContainerElement.offsetWidth);
+				}
+			}
 
 			// Set the overall font size by setting the storybook element font size
 			storybookContainerElement.style.fontSize = (pageElementWidth / bookConfig.pageWidth) + "px";
@@ -142,22 +148,32 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		
 		// Position the book in the viewport
 		updatePosition = function () {
-			
+		
+			var containerWidth = storybookContainerElement.offsetWidth;
+
+			// Center the book vertically
+			bookContainerElement.style.marginTop = (storybookContainerElement.offsetHeight - bookContainerElement.offsetHeight) / 2 + "px";
+
 			// If the book is closed and the cover is displayed
 			if (curPageIndex === -1) {
-				// If the orientation is landscape center the cover
-				pagesContainerElement.style.marginLeft = (curOrientation === "PORTRAIT") ? "" : "25%";
+				// Center the cover
+				bookContainerElement.style.marginLeft = (containerWidth - pagesContainerElement.offsetWidth) / 2 + "px";
 			} else {
-				// Remove any positioning for the page
-				pagesContainerElement.style.marginLeft = "auto";
+			
+				if (curOrientation === "PORTRAIT") {
+					// If an current page index is an odd (left page)
+					if (curPageIndex % 2) {
 				
-				// If an current page index is an odd (left page)
-				if (curPageIndex % 2) {
-					// Zoom on right page if in protrait
-					bookContainerElement.style.marginLeft = (curOrientation === "PORTRAIT") ? "-82%" : "2%";
+						// Zoom on right page
+						bookContainerElement.style.marginLeft = -(bookMargin + pageElementWidth * 2 - containerWidth) + "px";
+					} else {
+						// Zoom on left page
+						bookContainerElement.style.marginLeft = bookMargin + "px";
+					}
+
 				} else {
-					// Zoom on the left page if in portrait
-					bookContainerElement.style.marginLeft = (curOrientation === "PORTRAIT") ? "2%" : "2%";
+					// Center the book horizontally
+					bookContainerElement.style.marginLeft = (containerWidth - pagesContainerElement.offsetWidth) / 2 + "px";
 				}
 			}
 		},
@@ -223,7 +239,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				rightPageContainerElement.style.width = "100%";
 				
 				// Update the size of the book
-				//updateLayout();
+				updateLayout();
 				
 				// Position the book
 				updatePosition();
@@ -265,7 +281,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				rightPageContainerElement.style.width = "50%";
 				
 				// Update the size of the book
-				//updateLayout();
+				updateLayout();
 				
 				// Position the book
 				updatePosition();
@@ -357,7 +373,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		// Initialize the storybook
 		init = function () {
 		
-			var i, j, pageContainerElement, key;
+			var i, j, k, pageContainerElement, key, key2;
 			
 			if (!initialized) {
 			
@@ -484,6 +500,15 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 							if (key === "url") {
 								// Add a new resource object with the url
 								config.pages[i].content[j].resource = resourceLoader.addToQueue(config.pages[i].content[j].url);
+							} else if (key === "content") {
+								for (k = 0; k < config.pages[i].content[j].content.length; k += 1) {
+									for (key2 in config.pages[i].content[j].content[k]) {
+										if (key2 === "url") {
+											// Add a new resource object with the url
+											config.pages[i].content[j].content[k].resource = resourceLoader.addToQueue(config.pages[i].content[j].content[k].url);
+										}
+									}
+								}
 							}
 						}
 					}

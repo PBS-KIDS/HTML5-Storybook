@@ -28,6 +28,63 @@
 	
 	<h1>PBS Storybook Engine Release Notes</h1>
 	
+	<h2>Beta 0.013</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Book now supports fit to container height.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>Updated <var>updateLayout</var> and <var>updatePosition</var> in book.js to support scaling the book in both width and height.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>N/A</p>
+		</div>
+	</article>
+	
+	<h2>Beta 0.012</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Pages now have unique ids on their containers.</p>
+			<p>The space between paragraphs in a Text Area can now be specified with the <var>paragraphSpacing</var> property.</p>
+			<p>Cyclers are now supported.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>Added id attribute to all page's section element (e.g. id="pbsPage17"). Note the cover will have a page number of zero (e.g. id="pbsPage0").</p>
+			<p>Updated textArea.js so the margin-bottom of a paragraph will be set to the <var>paragraphSpacing</var> property if it exists and if there are multiple paragraphs.</p>
+			<p>Added cycler.js which allows for a "Cycler" to be added in the configuration.</p>
+			<p>Updated <var>init</var> and <var>navigationToComplete</var> methods of page.js to support Cyclers.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>N/A</p>
+		</div>
+	</article>
+	
 	<h2>Alpha 0.011</h2>
 	
 	<article>
