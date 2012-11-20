@@ -69,7 +69,6 @@ PBS.KIDS.storybook.config.pages.push({
 					x: "178px",
 					y: "316px",
 					numFrames: "12",
-					autoStart: true,
 					frameDelay: 6,
 					url: "images/tower-top-2.png"
 				},
@@ -79,7 +78,6 @@ PBS.KIDS.storybook.config.pages.push({
 					x: "178px",
 					y: "316px",
 					numFrames: "14",
-					autoStart: true,
 					frameDelay: 2,
 					url: "images/tower-top-3.png"
 				}

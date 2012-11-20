@@ -9,6 +9,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 	
 	var that = PBS.KIDS.storybook.eventDispatcher(),
 		resourceLoader = PBS.KIDS.storybook.resourceLoader(GLOBAL, PBS),
+		audioPlayer,
 		paused = false,
 		loadStarted = false,
 		destroyed = false,
@@ -28,6 +29,9 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		bookMargin,
 		bookWidth,
 		minBookMargin = 0.02,
+		audioLoadInitiated = false,
+		audioLoadedEnough = false,
+		resourceLoadComplete = false,
 		// Elements
 		bookWrapperElement,
 		bookContainerElement,
@@ -37,6 +41,10 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		navElement,
 		prevPageButtonElement,
 		nextPageButtonElement,
+		// Loading
+		loadingContainerElement, 
+		loadingView,
+		loadEvent,
 	
 		// Main loop that calls render and update to allow for interactive elements
 		loop = function () {
@@ -76,8 +84,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 			}
 		},
 		
-		fitWidth = function (containerWidth) {
-console.log("fitWidth: " + containerWidth);		
+		fitWidth = function (containerWidth) {		
 	
 			// Singe-Page layout
 			if (curOrientation === "PORTRAIT") {
@@ -106,8 +113,7 @@ console.log("fitWidth: " + containerWidth);
 			pagesContainerElement.style.height = pageElementHeight - bookMargin * 2 + "px";
 		},
 		
-		fitHeight = function (storybookContainerHeight) {
-console.log("fitHeight: " + storybookContainerHeight);		
+		fitHeight = function (storybookContainerHeight) {		
 		
 			pagesContainerElement.style.height = storybookContainerHeight - bookMargin * 2 + "px";
 			bookContainerElement.style.height = storybookContainerHeight - bookMargin * 2 + "px";		
@@ -207,6 +213,19 @@ console.log("fitHeight: " + storybookContainerHeight);
 				//     because it would do nothing on a real book
 			}
 		},
+		
+		// When the left page sound is done playing
+		leftPageSoundComplete = function () {
+		
+console.log("leftPageSoundComplete");
+		
+			audioPlayer.removeEventListener("PLAY_COMPLETE", leftPageSoundComplete);
+			
+			// Play the right page sound if it exists
+			if (pages[rightPageIndex].pageSound) {
+				audioPlayer.play(pages[rightPageIndex].pageSound);	
+			}
+		},
 
 		// Sets the current page index and updates pages if neccessary
 		navigateToPageIndex = function (pageIndex) {
@@ -214,6 +233,17 @@ console.log("fitHeight: " + storybookContainerHeight);
 			var i;
 
 			curPageIndex = pageIndex;
+			
+			// Stop sound
+			audioPlayer.stop();
+			
+			// TODO: Call navigationFromComplete after the page animation is completed
+			if (pages[leftPageIndex]) {
+				pages[leftPageIndex].navigationFromComplete();
+			}
+			if (pages[rightPageIndex]) {
+				pages[rightPageIndex].navigationFromComplete();
+			}
 			
 			// Clear page containers
 			for (i = 0; i < leftPageContainerElement.childNodes.length; i += 1) {
@@ -293,6 +323,39 @@ console.log("fitHeight: " + storybookContainerHeight);
 // TODO: Call navigationToBegin then when page turn is complete call navigationToComplete
 				pages[leftPageIndex].navigationToComplete();
 				pages[rightPageIndex].navigationToComplete();
+				
+				// If single page layout
+				if (curOrientation === "PORTRAIT") {
+					// If the page is the left page
+					if (leftPageIndex === curPageIndex) {
+						if (pages[leftPageIndex].pageSound) {
+							// Play the page sound
+							audioPlayer.play(pages[leftPageIndex].pageSound);
+						}
+					// If the page is the right page
+					} else {
+						if (pages[rightPageIndex].pageSound) {
+							// Play the page sound
+							audioPlayer.play(pages[rightPageIndex].pageSound);
+						}
+					}
+				// if two-page layout
+				} else {
+					// If the left page has sound
+					if (pages[leftPageIndex].pageSound) {
+						// Play the page sound
+						audioPlayer.play(pages[leftPageIndex].pageSound);
+						// If the right page has sound
+						if (pages[rightPageIndex].pageSound) {
+console.log("Listen to left page sound complete");
+							audioPlayer.addEventListener("PLAY_COMPLETE", leftPageSoundComplete)
+						}
+					// If the right page has sound
+					} else if (pages[rightPageIndex].pageSound) {
+						// Play the page sound
+						audioPlayer.play(pages[rightPageIndex].pageSound);
+					}
+				}
 			}
 			
 			hideBrowserUi();
@@ -347,7 +410,6 @@ console.log("fitHeight: " + storybookContainerHeight);
 			// Goto the current page index
 			navigateToPageIndex(curPageIndex);
 
-// TODO: determine why updateLayout needs to be called again here	
 			updateLayout();
 			
 			storybookContainerElement.addEventListener("touchstart", hideBrowserUi);
@@ -370,10 +432,158 @@ console.log("fitHeight: " + storybookContainerHeight);
 			loop();
 		},
 		
+		// Create resource objects for url keys in the configuration file
+		createResources = function () {
+		
+			var i, j, k, key, key2;
+			
+			// TODO: possibly search the whole configuration file via DFS, BFS or similar
+			// Create resource objects but don't load them yet.
+			for (key in config.book.pageBackground) {
+				if (config.book.pageBackground.hasOwnProperty(key)) {
+					if (key === "url") {
+						// Add a new resource object with the url
+						config.book.pageBackground.resource = resourceLoader.addToQueue(config.book.pageBackground.url);
+					}
+				}
+			}
+			
+			for (key in config.book.oddPageBackground) {
+				if (config.book.oddPageBackground.hasOwnProperty(key)) {
+					if (key === "url") {
+						// Add a new resource object with the url
+						config.book.oddPageBackground.resource = resourceLoader.addToQueue(config.book.oddPageBackground.url);
+					}
+				}
+			}
+			
+			for (key in config.book.evenPageBackground) {
+				if (config.book.evenPageBackground.hasOwnProperty(key)) {
+					if (key === "url") {
+						// Add a new resource object with the url
+						config.book.evenPageBackground.resource = resourceLoader.addToQueue(config.book.evenPageBackground.url);
+					}
+				}
+			}
+			
+			for (key in config.cover.background) {
+				if (config.cover.background.hasOwnProperty(key)) {
+					if (key === "url") {
+						// Add a new resource object with the url
+						config.cover.background.resource = resourceLoader.addToQueue(config.cover.background.url);
+					}
+				}
+			}
+			
+			for (j = 0; j < config.cover.content.length; j += 1) {
+				for (key in config.cover.content[j]) {
+					if (key === "url") {
+						// Add a new resource object with the url
+						config.cover.content[j].resource = resourceLoader.addToQueue(config.cover.content[j].url);
+					} else if (key === "content") {
+						for (k = 0; k < config.cover.content[j].content.length; k += 1) {
+							for (key2 in config.cover.content[j].content[k]) {
+								if (key2 === "url") {
+									// Add a new resource object with the url
+									config.cover.content[j].content[k].resource = resourceLoader.addToQueue(config.cover.content[j].content[k].url);
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			for (i = 0; i < config.pages.length; i += 1) {
+				for (key in config.pages[i].background) {
+					if (config.pages[i].background.hasOwnProperty(key)) {
+						if (key === "url") {
+							// Add a new resource object with the url
+							config.pages[i].background.resource = resourceLoader.addToQueue(config.pages[i].background.url);
+						}
+					}
+				}
+				
+				for (j = 0; j < config.pages[i].content.length; j += 1) {
+					for (key in config.pages[i].content[j]) {
+						if (key === "url") {
+							// Add a new resource object with the url
+							config.pages[i].content[j].resource = resourceLoader.addToQueue(config.pages[i].content[j].url);
+						} else if (key === "content") {
+							for (k = 0; k < config.pages[i].content[j].content.length; k += 1) {
+								for (key2 in config.pages[i].content[j].content[k]) {
+									if (key2 === "url") {
+										// Add a new resource object with the url
+										config.pages[i].content[j].content[k].resource = resourceLoader.addToQueue(config.pages[i].content[j].content[k].url);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		
+		updateLoadMessage = function (e) {
+		
+			if (e) {
+				loadEvent = e;
+			} else {
+				loadEvent = {};
+				loadEvent.progress = resourceLoader.getProgress();
+				loadEvent.total = resourceLoader.getTotal();
+			}
+		
+			if (audioPlayer) {
+				if (audioLoadInitiated) {
+					if (audioLoadedEnough) {
+						loadingContainerElement.innerHTML = '<p id="loadingText">Loading ' + (loadEvent.progress + 1) + " of " + (loadEvent.total) + "</p>";
+					} else {
+						loadingContainerElement.innerHTML = '<p id="loadingText">Loading ' + loadEvent.progress + " of " + (loadEvent.total + 1) + "</p>";
+					}
+				} else {
+					loadingContainerElement.innerHTML = '<p id="loadingText">Loading ' + loadEvent.progress + " of " + (loadEvent.total + 1) + "<br />Press to load sound.</p>";
+				}
+			} else {
+				loadingContainerElement.innerHTML = '<p id="loadingText">Loading ' + loadEvent.progress + " of " + loadEvent.total + "</p>";
+			}
+		},
+		
+		audioLoaded = function () {
+
+			storybookContainerElement.removeEventListener("LOAD_STARTED", audioLoaded);
+		
+			audioLoadedEnough = true;
+			
+			if (resourceLoadComplete) {
+				start();
+			}
+		},
+		
+		resourcesLoaded = function () {
+			
+			resourceLoadComplete = true;
+			
+			if (!audioPlayer || audioLoadedEnough === true) {
+				start();
+			}
+		},
+		
+		loadAudio = function () {
+
+			storybookContainerElement.removeEventListener("PRESS", loadAudio);
+			
+			audioPlayer.addEventListener("LOAD_STARTED", audioLoaded);
+			audioPlayer.load();
+			
+			audioLoadInitiated = true;
+			
+			updateLoadMessage();
+		},
+		
 		// Initialize the storybook
 		init = function () {
 		
-			var i, j, k, pageContainerElement, key, key2;
+			var i, pageContainerElement, audioFilename;
 			
 			if (!initialized) {
 			
@@ -447,71 +657,10 @@ console.log("fitHeight: " + storybookContainerHeight);
 				nextPageButtonSprite = PBS.KIDS.storybook.makeInteractionObject(GLOBAL, PBS, nextPageButtonSprite);
 				navElement.appendChild(nextPageButtonElement);
 				
-// TODO: possibly search the whole configuration file via DFS, BFS or similar
-				// Create resource objects but don't load them yet.
-				for (key in config.book.pageBackground) {
-					if (config.book.pageBackground.hasOwnProperty(key)) {
-						if (key === "url") {
-							// Add a new resource object with the url
-							config.book.pageBackground.resource = resourceLoader.addToQueue(config.book.pageBackground.url);
-						}
-					}
-				}
+				createResources();
 				
-				for (key in config.book.oddPageBackground) {
-					if (config.book.oddPageBackground.hasOwnProperty(key)) {
-						if (key === "url") {
-							// Add a new resource object with the url
-							config.book.oddPageBackground.resource = resourceLoader.addToQueue(config.book.oddPageBackground.url);
-						}
-					}
-				}
-				
-				for (key in config.book.evenPageBackground) {
-					if (config.book.evenPageBackground.hasOwnProperty(key)) {
-						if (key === "url") {
-							// Add a new resource object with the url
-							config.book.evenPageBackground.resource = resourceLoader.addToQueue(config.book.evenPageBackground.url);
-						}
-					}
-				}
-				
-				for (key in config.cover.background) {
-					if (config.cover.background.hasOwnProperty(key)) {
-						if (key === "url") {
-							// Add a new resource object with the url
-							config.cover.background.resource = resourceLoader.addToQueue(config.cover.background.url);
-						}
-					}
-				}
-				
-				for (i = 0; i < config.pages.length; i += 1) {
-					for (key in config.pages[i].background) {
-						if (config.pages[i].background.hasOwnProperty(key)) {
-							if (key === "url") {
-								// Add a new resource object with the url
-								config.pages[i].background.resource = resourceLoader.addToQueue(config.pages[i].background.url);
-							}
-						}
-					}
-					
-					for (j = 0; j < config.pages[i].content.length; j += 1) {
-						for (key in config.pages[i].content[j]) {
-							if (key === "url") {
-								// Add a new resource object with the url
-								config.pages[i].content[j].resource = resourceLoader.addToQueue(config.pages[i].content[j].url);
-							} else if (key === "content") {
-								for (k = 0; k < config.pages[i].content[j].content.length; k += 1) {
-									for (key2 in config.pages[i].content[j].content[k]) {
-										if (key2 === "url") {
-											// Add a new resource object with the url
-											config.pages[i].content[j].content[k].resource = resourceLoader.addToQueue(config.pages[i].content[j].content[k].url);
-										}
-									}
-								}
-							}
-						}
-					}
+				if (config.audio && config.audio && config.audio.name && config.audio.enabled !== "false") {
+					audioPlayer = PBS.KIDS.storybook.audioPlayer(GLOBAL, PBS, config.audio.path + config.audio.name);
 				}
 				
 				// Create cover
@@ -526,14 +675,16 @@ console.log("fitHeight: " + storybookContainerHeight);
 				// Create the storybook pages
 				for (i = 0; i < config.pages.length; i += 1) {
 					pages[i] = PBS.KIDS.storybook.page(GLOBAL, PBS, config.pages[i], i + 1, {
-						bookConfig: bookConfig
+						bookConfig: bookConfig,
+						audioPlayer: audioPlayer
 					});
 				}
 				
 				// If an odd number of pages are specified, place a blank page at the end
 				if (config.pages.length % 2) {
 					pages[config.pages.length] = PBS.KIDS.storybook.page(GLOBAL, PBS, {}, config.pages.length + 1, {
-						bookConfig: bookConfig
+						bookConfig: bookConfig,
+						audioPlayer: audioPlayer
 					});
 				}
 				
@@ -612,7 +763,7 @@ console.log("fitHeight: " + storybookContainerHeight);
 				targetPageIndex = curPageIndex + 2;
 			}
 		}
-		
+console.log("that.nextPage: " + curPageIndex + " -> " + targetPageIndex);		
 		// If the target page is valid
 		if (targetPageIndex < pages.length) {
 			navigateToPageIndex(targetPageIndex);
@@ -660,10 +811,20 @@ console.log("fitHeight: " + storybookContainerHeight);
 			
 			// Create a simple loading screen to display the loading progess
 			storybookContainerElement.innerHTML = "";
-			resourceLoader.addEventListener("QUEUE_UPDATE", function (e) {
-				storybookContainerElement.innerHTML = '<p class="loadingText">Loading ' + e.progress + " of " + e.total + "</p>";
-			});
-			resourceLoader.addEventListener("QUEUE_LOADED", start);
+			
+			// Create the page container
+			loadingContainerElement = GLOBAL.document.createElement("section");
+			loadingContainerElement.className = "loadingContainer";
+			storybookContainerElement.appendChild(loadingContainerElement);
+			
+			if (audioPlayer) {
+				loadingView = PBS.KIDS.storybook.interactionObject(GLOBAL, PBS, loadingContainerElement);
+				loadingView.addEventListener("PRESS", loadAudio);
+			}
+			
+			resourceLoader.addEventListener("QUEUE_UPDATE", updateLoadMessage);
+
+			resourceLoader.addEventListener("QUEUE_LOADED", resourcesLoaded);
 			// Load all the resources
 			resourceLoader.loadQueue();
 		}
@@ -674,30 +835,31 @@ console.log("fitHeight: " + storybookContainerHeight);
 	
 	// requestAnimationFrame polyfill by Erik Möller
 	// fixes from Paul Irish and Tino Zijdel
-	
 	(function() {
 	    var lastTime = 0;
 	    var vendors = ['ms', 'moz', 'webkit', 'o'];
 	    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; x += 1) {
 	        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-	        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
-	                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
+	        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
 	    }
 	 
-	    if (!window.requestAnimationFrame)
+	    if (!window.requestAnimationFrame) {
 	        window.requestAnimationFrame = function(callback, element) {
 	            var currTime = new Date().getTime();
 	            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-	            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-	              timeToCall);
+	            var id = window.setTimeout(function() { 
+	            	callback(currTime + timeToCall); 
+	            }, timeToCall);
 	            lastTime = currTime + timeToCall;
 	            return id;
 	        };
+	    }
 	 
-	    if (!window.cancelAnimationFrame)
+	    if (!window.cancelAnimationFrame) {
 	        window.cancelAnimationFrame = function(id) {
 	            clearTimeout(id);
 	        };
+	    }
 	}());
 	
 	init();

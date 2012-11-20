@@ -79,6 +79,16 @@ PBS.KIDS.storybook.resourceLoader = function (GLOBAL, PBS) {
 			}
 		}
 	};
+	
+	that.getProgress = function () {
+		
+		return numResourcesLoaded;
+	};
+	
+	that.getTotal = function () {
+		
+		return queue.length;
+	};
 
 	return that;
 };

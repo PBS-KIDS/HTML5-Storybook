@@ -10,6 +10,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 	var that = PBS.KIDS.storybook.eventDispatcher(),
 		width = options.bookConfig.pageWidth || 768,
 		height = options.bookConfig.pageHeight || 1024,
+		audioPlayer = options.audioPlayer,
 		backgroundSprite,
 		ctx,
 		element,
@@ -30,6 +31,9 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 				that.dispatchEvent("LOAD_COMPLETE");
 			}
 		};
+	
+	// Public Properties
+	that.pageSound;
 	
 	// Initialize the page
 	that.init = function () {
@@ -60,7 +64,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 		pageView.addEventListener("DRAG", function (e) {
 
 			// If dragged enough
-			if (e.distanceX > 50) {
+			if (e.distanceX > width / 20) {
 				// Stop drag
 				pageView.cancelInteraction();
 				// Dispatch drag events
@@ -109,7 +113,14 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 		backgroundSprite = PBS.KIDS.storybook.sprite(GLOBAL, PBS, config.background);
 		backgroundSprite.addEventListener("LOAD_COMPLETE", resourceLoaded);
 		backgroundSprite = PBS.KIDS.storybook.makeInteractionObject(GLOBAL, PBS, backgroundSprite);
-
+		
+		// If a page sound is specified
+		if (audioPlayer && config && config.sound) {
+			that.pageSound = PBS.KIDS.storybook.sound(config.sound.startTime, config.sound.endTime, {
+				loop: config.sound.loop
+			});
+		}
+		
 		// For each item on the page
 		if (config && config.content) {
 			for (i = 0; i < config.content.length; i += 1) {
@@ -160,6 +171,11 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 						curCycler.playAfterDelay = config.content[i].playAfterDelay;
 					}
 					break;
+					
+				default:
+				
+					PBS.KIDS.storybook.warning("Object Type Unknown: " + config.content[i].type);
+					break;
 				}
 			}
 		}
@@ -177,7 +193,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 	
 	// When the page is finished turning to this page
 	that.navigationToComplete = function () {
-		
+			
 		var i;
 		 
 		// If a page background
@@ -216,13 +232,12 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 	
 	// When the page starts turning away from the page
 	that.navigationFromBegin = function () {
-
+	
 	};
 	
 	// When the page is finished turning away from the page
-	that.navigationFromComplete = function () {
-		
-		
+	that.navigationFromComplete = function () {	
+
 	};
 	
 	// Destroy the page and its contents

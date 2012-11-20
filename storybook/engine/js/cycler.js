@@ -47,16 +47,19 @@ PBS.KIDS.storybook.cycler = function (GLOBAL, PBS, options) {
 	that.autoStart = options && (options.autoStart !== undefined) ? options.autoStart : true;
 	that.autoReset = options && (options.autoReset !== undefined) ? options.autoReset : false;
 	
+	// Display the next item in list
 	that.cycle = function () {
 	
 		var i;
 	
+		// Increment the item index
 		if (activeIndex < itemArray.length - 1) {
 			activeIndex += 1;
 		} else {
 			activeIndex = 0;
 		}
 		
+		// Hide all items and show the active item
 		for (i = 0; i < itemArray.length; i += 1) {
 			if (i === activeIndex) {
 				itemArray[i].visible = true;
@@ -70,21 +73,25 @@ PBS.KIDS.storybook.cycler = function (GLOBAL, PBS, options) {
 		
 	};
 	
+	// Play the active item
 	that.play = function () {
 	
 		itemArray[activeIndex].play();
 	};
 	
+	// Resume the active item
 	that.resume = function () {
 	
 		itemArray[activeIndex].resume();
 	};
 	
+	// Stop the active item
 	that.stop = function () {
 	
 		itemArray[activeIndex].stop();	
 	};
 	
+	// Reset the active item
 	that.reset = function () {
 	
 		itemArray[activeIndex].reset();

@@ -66,9 +66,9 @@ PBS.KIDS.storybook.sprite = function (GLOBAL, PBS, options) {
 					element.style.width = (parentWidthRatio * 100) + "%";
 				}
 				
-				// If the width was specified
+				// If the height was specified
 				if (options.height) {
-					// If px is in the width (e.g. 100px)
+					// If px is in the height (e.g. 100px)
 					if (options.height.toString().indexOf("px") !== -1) {
 						element.style.height = options.height;
 					} else {

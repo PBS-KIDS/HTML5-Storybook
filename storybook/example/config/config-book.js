@@ -5,8 +5,13 @@
 
 PBS.KIDS.storybook.config = {
 	background: {
-		color: "#43ff92",
+		color: "#ababab",
 		url: "images/circles-background.png"
+	},
+	audio: {
+		enabled: true,
+		path: "http://www.williammalone.com/public/",
+		name: "001"	
 	},
 	book: {
 		font: "Georgia",
@@ -52,6 +57,15 @@ PBS.KIDS.storybook.config = {
 				size: 48,
 				font: "Droid Serif",
 				text: "Example Storybook"
+			},
+			{
+				type: "Sprite",
+				x: 25,
+				y: 80,
+				numFrames: 10,
+				frameDelay: 10,
+				loop: true,
+				url: "images/ball-roll.png"
 			}
 		]
 	},

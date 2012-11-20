@@ -28,6 +28,37 @@
 	
 	<h1>PBS Storybook Engine Release Notes</h1>
 	
+	<h2>Beta 0.014</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Page sounds can now be set in the configuration file.</p>
+			<p>Page sounds now support looping.</p>
+			<p>In two-page layout the right page will play after the left page sound is complete.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>Code was added to book.js to add images found in the content array of the cover to the resource loader.</p>
+			<p>Moved code for creating resource objects from url keys in the config to a new function <var>createResources</var> in book.js.</p>
+			<p>Page.js and book.js were updated to support sounds.</p>
+			<p>AudioPlayer.js was added to support sounds.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>Cover now supports sprites in content array.</p>
+		</div>
+	</article>
+	
 	<h2>Beta 0.013</h2>
 	
 	<article>

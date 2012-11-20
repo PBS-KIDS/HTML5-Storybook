@@ -27,8 +27,8 @@ PBS.KIDS.storybook.eventDispatcher = function () {
 		var i;
 		
 		// If a listener array that matches the name exists
-		if (listeners[eventName]) {
-			for (i = 0; i < listeners[eventName].length; i += 1) {
+		if (eventListeners[eventName]) {
+			for (i = 0; i < eventListeners[eventName].length; i += 1) {
 				// Remove all listeners that match
 				if (eventListeners[eventName][i] === listener) {
 					eventListeners[eventName].splice(i, 1);
