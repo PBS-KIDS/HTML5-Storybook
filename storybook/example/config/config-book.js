@@ -41,7 +41,8 @@ PBS.KIDS.storybook.config = {
 		},
 		evenPageBackground: {
 			color: "#f9f9f9"
-		}
+		},
+		pageTurnDuration: 1000
 	},
 	cover: {
 		background: {

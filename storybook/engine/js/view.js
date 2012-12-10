@@ -8,26 +8,8 @@ PBS.KIDS.storybook.view = function (PBS, element) {
 	"use strict";
 	
 	var that = PBS.KIDS.storybook.eventDispatcher(),
-		element,
-		
-		// Returns true if the parameter has the string "px" (e.g. "100px" returns true)
-		isInPixelUnits = function (param) {
-			
-			return (param.toString().toUpperCase().indexOf("PX") !== -1);
-		},
-		
-		// Remove anything that is not a number (e.g. "px" or "%") from a string
-		getNumberFromString = function (param) {
-		
-			// Make sure the string is defined and is a string object
-			if (!param) {
-				return;
-			} else if (typeof param !== "string") {
-				param = param.toString();
-			}
-			// Replace everything that is not a number with empty string
-			return param.replace(/[^-\d\.]/g, "")
-		};
+		sb = PBS.KIDS.storybook,
+		element;
 	
 	// Public properties
 	that.parentWidth;
@@ -51,78 +33,78 @@ PBS.KIDS.storybook.view = function (PBS, element) {
 		// Set the position of the element relative to the left or right
 		if (that.horizontalAlign === "RIGHT") {
 			// If position set in pixels (e.g "99px")
-			if (isInPixelUnits(that.x)) {
+			if (sb.isInPixelUnits(that.x)) {
 				if (that.parentWidth) {
-					element.style.right = (getNumberFromString(that.x) / that.parentWidth) * 100 + "%";
+					element.style.right = (sb.getNumberFromString(that.x) / that.parentWidth) * 100 + "%";
 				} else {
 					element.style.right = that.x;
 				}
 			} else {
-				element.style.right = getNumberFromString(that.x) + "%";
+				element.style.right = sb.getNumberFromString(that.x) + "%";
 			}
 		} else {
 			// If position set in pixels (e.g "99px")
-			if (isInPixelUnits(that.x)) {
+			if (sb.isInPixelUnits(that.x)) {
 				if (that.parentWidth) {
-					element.style.left = (getNumberFromString(that.x) / that.parentWidth) * 100 + "%";
+					element.style.left = (sb.getNumberFromString(that.x) / that.parentWidth) * 100 + "%";
 				} else {
 					element.style.left = that.x;
 				}
 			} else {
-				element.style.left = getNumberFromString(that.x) + "%";
+				element.style.left = sb.getNumberFromString(that.x) + "%";
 			}
 		}
 		
 		// Set the position of the element relative to the top or bottom
 		if (that.verticalAlign === "BOTTOM") {
 			// If position set in pixels (e.g "99px")
-			if (isInPixelUnits(that.y)) {
+			if (sb.isInPixelUnits(that.y)) {
 				if (that.parentHeight) {
-					element.style.bottom = (getNumberFromString(that.y) / that.parentHeight) * 100 + "%";
+					element.style.bottom = (sb.getNumberFromString(that.y) / that.parentHeight) * 100 + "%";
 				} else {
 					element.style.bottom = that.y;
 				}
 			} else {
-				element.style.bottom = getNumberFromString(that.y) + "%";
+				element.style.bottom = sb.getNumberFromString(that.y) + "%";
 			}
 		} else {
 			// If position set in pixels (e.g "99px")
-			if (isInPixelUnits(that.y)) {
+			if (sb.isInPixelUnits(that.y)) {
 				if (that.parentHeight) {
-					element.style.top = (getNumberFromString(that.y) / that.parentHeight) * 100 + "%";
+					element.style.top = (sb.getNumberFromString(that.y) / that.parentHeight) * 100 + "%";
 				} else {
 					element.style.top = that.y;
 				}
 			} else {
-				element.style.top = getNumberFromString(that.y) + "%";
+				element.style.top = sb.getNumberFromString(that.y) + "%";
 			}
 		}
 		
 		// Set the width of the element
 		if (that.width) {
 			// If width set in pixels (e.g "99px")
-			if (isInPixelUnits(that.width)) {
+			if (sb.isInPixelUnits(that.width)) {
 				if (that.parentWidth) {
-					element.style.width = (getNumberFromString(that.width) / that.parentWidth) * 100 + "%";
+					element.style.width = (sb.getNumberFromString(that.width) / that.parentWidth) * 100 + "%";
 				} else {
 					element.style.width = that.width;
 				}
 			} else {
-				element.style.width = getNumberFromString(that.width) + "%";
+				element.style.width = sb.getNumberFromString(that.width) + "%";
 			}
 		}
 		
 		// Set the height of the element
 		if (that.height) {
 			// If height set in pixels (e.g "99px")
-			if (isInPixelUnits(that.height)) {
+			if (sb.isInPixelUnits(that.height)) {
 				if (that.parentHeight) {
-					element.style.height = (getNumberFromString(that.height) / that.parentHeight) * 100 + "%";
+					element.style.height = (sb.getNumberFromString(that.height) / that.parentHeight) * 100 + "%";
 				} else {
 					element.style.height = that.height;
 				}
 			} else {
-				element.style.height = getNumberFromString(that.height) + "%";
+				element.style.height = sb.getNumberFromString(that.height) + "%";
 			}
 		}
 	};

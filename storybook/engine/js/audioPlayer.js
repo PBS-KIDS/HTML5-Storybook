@@ -202,8 +202,6 @@ PBS.KIDS.storybook.audioPlayer = function (GLOBAL, PBS, src, options) {
 		// Save the sound properties
 		currentSound = soundObj;
 		
-		//audioElement.pause();
-		
 		// Set the scrubber to the sound start time
 		audioElement.currentTime = currentSound.startTime;
 		
@@ -221,7 +219,6 @@ PBS.KIDS.storybook.audioPlayer = function (GLOBAL, PBS, src, options) {
 	// Pause the audio element and clear the current sound
 	that.stop = function () {
 	
-		console.log("Stop Sound");
 		endSound();
 	};
 	

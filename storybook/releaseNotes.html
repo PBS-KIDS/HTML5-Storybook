@@ -28,6 +28,63 @@
 	
 	<h1>PBS Storybook Engine Release Notes</h1>
 	
+	<h2>Beta 0.016</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Page turn animations are now supported. (This can be turned off by setting the "pageTurnDuration" on the book object in the config to "0").</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>Page turn duration can be set in the book config under the "pageTurnDuration" property.</p>
+			<p>The following CSS was added to support page turning: pbsPageTurnContainer, pbsPageTurnPageContainer, pbsRightPageTurnGradient and pbsLeftPageTurnGradient.</p>
+			<p>Moved a couple utility functions from view.js to pbs.js: <var>getNumberFromString</var> and <var>isInPixelUnits</var>.</p>
+			<p>Added a new utlity function <var>isInPercentageUnits</var> which will return true if the string has a "%" symbol present.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>Fixed a bug where the cover was not zoomed correctly on iPhone 5.</p>
+			<p>Fixed a bug where if a sprite x and y position was set to zero then the sprite would be positioned off screen.</p>
+		</div>
+	</article>
+	
+	<h2>Beta 0.015</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>N/A</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>The <var>audioLoadedEnough</var> is now used in the <var>audioLoaded</var> function to prevent the main loop to be invoked multiple times.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>Pressing a navigation button causing the main loop to be started more than once has been prevented by </p>
+			<p>Updated the font declaration in the fonts.css of the example storybook to include *.eot and *.woff of one of the fonts that was not showing up in IE9.</p>
+		</div>
+	</article>
+	
 	<h2>Beta 0.014</h2>
 	
 	<article>

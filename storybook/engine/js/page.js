@@ -38,7 +38,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 	// Initialize the page
 	that.init = function () {
 	
-		var spec, i, curTextArea, curSprite, curCycler;
+		var spec, i, curTextArea, curSprite, curCycler, curDrawingPad;
 	
 		// A configuration object is required
 		if (config === undefined) {
@@ -171,10 +171,21 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 						curCycler.playAfterDelay = config.content[i].playAfterDelay;
 					}
 					break;
+				
+				case "DrawingPad":
+	
+					config.content[i].parentElement = element;
+					config.content[i].parentWidth = width;
+					config.content[i].parentHeight = height;
+					
+					curDrawingPad = PBS.KIDS.storybook.drawingPad(GLOBAL, PBS, config.content[i]);
+					curDrawingPad = PBS.KIDS.storybook.makeInteractionObject(GLOBAL, PBS, curDrawingPad);
+					contentArray.push(curDrawingPad);
+					break;
 					
 				default:
 				
-					PBS.KIDS.storybook.warning("Object Type Unknown: " + config.content[i].type);
+					PBS.KIDS.storybook.error("Object Type Unknown: " + config.content[i].type);
 					break;
 				}
 			}
@@ -228,16 +239,6 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 				GLOBAL.setTimeout(cyclerArray[i].play, GLOBAL.parseInt(cyclerArray[i].playAfterDelay, 10) * 1000);
 			}
 		}
-	};
-	
-	// When the page starts turning away from the page
-	that.navigationFromBegin = function () {
-	
-	};
-	
-	// When the page is finished turning away from the page
-	that.navigationFromComplete = function () {	
-
 	};
 	
 	// Destroy the page and its contents

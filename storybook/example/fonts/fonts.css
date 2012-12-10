@@ -1,8 +1,11 @@
 
 @font-face {
     font-family: 'Reenie Beanie';
-    src: url('reenie-beanie/reenie-beanie.ttf') format('truetype'),
-         url('reenie-beanie/reenie-beanie.svg#Reenie Beanie') format('svg');
+    src: url('reenie-beanie/reenie-beanie.eot');
+    src: url('reenie-beanie/reenie-beanie.eot?#iefix') format('embedded-opentype'),
+         url('reenie-beanie/reenie-beanie.woff') format('woff'),
+         url('reenie-beanie/reenie-beanie.ttf') format('truetype'),
+         url('reenie-beanie/reenie-beanie.svg#Reenie_Beanie') format('svg');
     font-weight: normal;
     font-style: normal;
 }

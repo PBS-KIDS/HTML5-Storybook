@@ -117,6 +117,41 @@ PBS.KIDS.storybook = (function (GLOBAL) {
 			
 		return Math.sqrt(dx * dx + dy * dy);
 	};
+	
+	// Remove anything that is not a number (e.g. "px" or "%") from a string
+	that.getNumberFromString = function (param) {
+	
+		// Make sure the string is defined and is a string object
+		if (param === undefined) {
+			return;
+		} else if (typeof param !== "string") {
+			param = param.toString();
+		}
+		// Replace everything that is not a number with empty string
+		return param.replace(/[^-\d\.]/g, "")
+	};
+	
+	// Returns true if the parameter has the string "px" (e.g. "100px" returns true)
+	that.isInPixelUnits = function (param) {
+		
+		return (param.toString().toUpperCase().indexOf("PX") !== -1);
+	};
+	
+	// Returns true if the parameter has the character "%" (e.g. "100%" returns true)
+	that.isInPercentageUnits = function (param) {
+		
+		return (param.toString().indexOf("%") !== -1);
+	};
+	
+	// Returns all children of an element
+	that.removeAllChildren = function (element) {
+		
+		var i, numChildren = element.childNodes.length;
+	
+		for (i = 0; i < numChildren; i += 1) {
+			element.removeChild(element.childNodes[element.childNodes.length - 1]);
+		}
+	};
 
 	return that;
 	
