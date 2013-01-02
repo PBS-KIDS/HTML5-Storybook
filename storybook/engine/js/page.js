@@ -7,7 +7,8 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 	
 	"use strict";
 	
-	var that = PBS.KIDS.storybook.eventDispatcher(),
+	var sb = PBS.KIDS.storybook,
+		that = sb.eventDispatcher(),
 		width = options.bookConfig.pageWidth || 768,
 		height = options.bookConfig.pageHeight || 1024,
 		audioPlayer = options.audioPlayer,
@@ -38,17 +39,17 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 	// Initialize the page
 	that.init = function () {
 	
-		var spec, i, curTextArea, curSprite, curCycler, curDrawingPad;
+		var spec, i, curTextArea, curSprite, curCycler, curDrawingPad, pageSoundPersistence;
 	
 		// A configuration object is required
 		if (config === undefined) {
-			PBS.KIDS.storybook.error("Configuration missing for page " + pageNum);
+			sb.error("Configuration missing for page " + pageNum);
 			return;
 		}
 		
 		// A page number is required
 		if (pageNum === undefined) {
-			PBS.KIDS.storybook.error("Missing page number parameter");
+			sb.error("Missing page number parameter");
 			return;
 		}
 		
@@ -58,7 +59,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 		element.className = "pbsPage";
 		
 		// Create the page
-		pageView = PBS.KIDS.storybook.interactionObject(GLOBAL, PBS, element);
+		pageView = sb.interactionObject(GLOBAL, PBS, element);
 		
 		// A assign a drag event listener on the page
 		pageView.addEventListener("DRAG", function (e) {
@@ -110,14 +111,16 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 		}
 		
 		// Create page background
-		backgroundSprite = PBS.KIDS.storybook.sprite(GLOBAL, PBS, config.background);
+		backgroundSprite = sb.sprite(GLOBAL, PBS, config.background);
 		backgroundSprite.addEventListener("LOAD_COMPLETE", resourceLoaded);
-		backgroundSprite = PBS.KIDS.storybook.makeInteractionObject(GLOBAL, PBS, backgroundSprite);
+		backgroundSprite = sb.makeInteractionObject(GLOBAL, PBS, backgroundSprite);
 		
+		pageSoundPersistence = (config && config.sound && config.sound.persist !== undefined) ? config.sound.persist : true;
 		// If a page sound is specified
 		if (audioPlayer && config && config.sound) {
-			that.pageSound = PBS.KIDS.storybook.sound(config.sound.startTime, config.sound.endTime, {
-				loop: config.sound.loop
+			that.pageSound = sb.sound(config.sound.startTime, config.sound.endTime, {
+				loop: config.sound.loop,
+				persist: pageSoundPersistence
 			});
 		}
 		
@@ -132,9 +135,14 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 					config.content[i].parentWidth = width;
 					config.content[i].parentHeight = height;
 					
-					curTextArea = PBS.KIDS.storybook.textArea(GLOBAL, PBS, config.content[i]);
+					curTextArea = sb.textArea(GLOBAL, PBS, config.content[i]);
 					
-					//curTextArea = PBS.KIDS.storybook.makeInteractionObject(GLOBAL, PBS, curTextArea);
+					// If a sound is specified
+					if (config.content[i].sound) {
+						curTextArea = sb.makeInteractionObject(GLOBAL, PBS, curTextArea);
+						curTextArea = sb.makeAudible(GLOBAL, PBS,  audioPlayer, curTextArea, config.content[i].sound);
+					}
+					
 					textAreaArray.push(curTextArea);
 					contentArray.push(curTextArea);
 					break;
@@ -145,8 +153,14 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 					config.content[i].parentWidth = width;
 					config.content[i].parentHeight = height;
 					
-					curSprite = PBS.KIDS.storybook.sprite(GLOBAL, PBS, config.content[i]);
-					curSprite = PBS.KIDS.storybook.makeInteractionObject(GLOBAL, PBS, curSprite);
+					curSprite = sb.sprite(GLOBAL, PBS, config.content[i]);
+					curSprite = sb.makeInteractionObject(GLOBAL, PBS, curSprite);
+					
+					// If a sound is specified
+					if (config.content[i].sound) {
+						curSprite = sb.makeAudible(GLOBAL, PBS, audioPlayer, curSprite, config.content[i].sound);
+					}
+					
 					spriteArray.push(curSprite);
 					contentArray.push(curSprite);
 					
@@ -162,7 +176,13 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 					config.content[i].parentWidth = width;
 					config.content[i].parentHeight = height;
 					
-					curCycler = PBS.KIDS.storybook.cycler(GLOBAL, PBS, config.content[i]);
+					curCycler = sb.cycler(GLOBAL, PBS, config.content[i]);
+					
+					// If a sound is specified
+					if (config.content[i].sound) {
+						curCycler = sb.makeAudible(GLOBAL, PBS, audioPlayer, curCycler, config.content[i].sound);
+					}
+					
 					contentArray.push(curCycler);
 					cyclerArray.push(curCycler);
 					
@@ -177,15 +197,21 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 					config.content[i].parentElement = element;
 					config.content[i].parentWidth = width;
 					config.content[i].parentHeight = height;
+							
+					curDrawingPad = sb.drawingPad(GLOBAL, PBS, config.content[i]);
+					curDrawingPad = sb.makeInteractionObject(GLOBAL, PBS, curDrawingPad);
 					
-					curDrawingPad = PBS.KIDS.storybook.drawingPad(GLOBAL, PBS, config.content[i]);
-					curDrawingPad = PBS.KIDS.storybook.makeInteractionObject(GLOBAL, PBS, curDrawingPad);
+					// If a sound is specified
+					if (config.content[i].sound) {
+						curDrawingPad = sb.makeAudible(GLOBAL, PBS, audioPlayer, curDrawingPad, config.content[i].sound);
+					}
+					
 					contentArray.push(curDrawingPad);
 					break;
 					
 				default:
 				
-					PBS.KIDS.storybook.error("Object Type Unknown: " + config.content[i].type);
+					sb.error("Object Type Unknown: " + config.content[i].type);
 					break;
 				}
 			}

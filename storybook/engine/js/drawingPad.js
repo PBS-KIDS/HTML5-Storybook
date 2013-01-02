@@ -14,12 +14,34 @@ PBS.KIDS.storybook.drawingPad = function (GLOBAL, PBS, options) {
 		element,
 		initialized = false,
 		parentElement = options && options.parentElement,
-		dirty = true,
 		pad,
+		colorButtons = [],
+		clearButtons = [],
+		eraserButtons = [],
+		
+		resourceLoaded = function () {
+			that.dirty = true;
+		},
+		
+		changeColor = function (paintColor) {
+		
+			pad.setTool("MARKER");	
+			pad.setColor(paintColor);
+		},
+		
+		clearPad = function () {
+		
+			pad.clear();
+		},
+		
+		setEraserTool = function () {
+
+			pad.setTool("ERASER");	
+		},
 		
 		init = function () {
 	
-			var i, width, height;
+			var i, width, height, key, key2;
 			
 			if (!initialized) {
 				initialized = true;
@@ -50,14 +72,89 @@ PBS.KIDS.storybook.drawingPad = function (GLOBAL, PBS, options) {
 				} else {
 					height = that.height * that.parentHeight / 100;
 				}
-				
+			
 				// Create drawing canvas
 				pad = WM.drawingCanvas(element, {
 					width: width,
 					height: height,
 					defaultColor: options.defaultColor,
-					radius: options.radius
+					radius: options.radius,
+					overlayUrl: options.overlayUrl,
+					textureUrl: options.textureUrl
 				});
+				
+				for (key in options) {
+					if (key === "colorButtons") {
+						for (i = 0; i < options.colorButtons.length; i += 1) {
+							for (key2 in options.colorButtons[i]) {
+								if (key2 === "url") {
+								
+									// Set the paint color to the first color button
+									if (i === 0) {
+										changeColor(options.colorButtons[i].paintColor);
+									}
+
+									options.colorButtons[i].parentElement = parentElement;
+									options.colorButtons[i].parentWidth = that.parentWidth;
+									options.colorButtons[i].parentHeight = that.parentHeight;
+									
+									// Listen for image load
+									options.colorButtons[i].resource.image.addEventListener("load", resourceLoaded);
+					
+									colorButtons.push(sb.sprite(GLOBAL, PBS, options.colorButtons[i]));
+									colorButtons[colorButtons.length - 1] = sb.makeInteractionObject(GLOBAL, PBS, colorButtons[colorButtons.length - 1]);
+									
+									// Change paint color of the drawing pad on press
+									colorButtons[colorButtons.length - 1].addEventListener("PRESS", (function (color) {
+										return function () {
+											changeColor(color);
+										};
+									}(options.colorButtons[i].paintColor)));
+								}
+							}
+						}
+					} else if (key === "clearButtons") {
+						for (i = 0; i < options.clearButtons.length; i += 1) {
+							for (key2 in options.clearButtons[i]) {
+								if (key2 === "url") {
+
+									options.clearButtons[i].parentElement = parentElement;
+									options.clearButtons[i].parentWidth = that.parentWidth;
+									options.clearButtons[i].parentHeight = that.parentHeight;
+									
+									// Listen for image load
+									options.clearButtons[i].resource.image.addEventListener("load", resourceLoaded);
+					
+									clearButtons.push(sb.sprite(GLOBAL, PBS, options.clearButtons[i]));
+									clearButtons[clearButtons.length - 1] = sb.makeInteractionObject(GLOBAL, PBS, clearButtons[clearButtons.length - 1]);
+									
+									// Change paint color of the drawing pad on press
+									clearButtons[clearButtons.length - 1].addEventListener("PRESS", clearPad);
+								}
+							}
+						}
+					} else if (key === "eraserButtons") {
+						for (i = 0; i < options.eraserButtons.length; i += 1) {
+							for (key2 in options.eraserButtons[i]) {
+								if (key2 === "url") {
+
+									options.eraserButtons[i].parentElement = parentElement;
+									options.eraserButtons[i].parentWidth = that.parentWidth;
+									options.eraserButtons[i].parentHeight = that.parentHeight;
+									
+									// Listen for image load
+									options.eraserButtons[i].resource.image.addEventListener("load", resourceLoaded);
+					
+									eraserButtons.push(sb.sprite(GLOBAL, PBS, options.eraserButtons[i]));
+									eraserButtons[eraserButtons.length - 1] = sb.makeInteractionObject(GLOBAL, PBS, eraserButtons[eraserButtons.length - 1]);
+									
+									// Change paint color of the drawing pad on press
+									eraserButtons[eraserButtons.length - 1].addEventListener("PRESS", setEraserTool);
+								}
+							}
+						}
+					}				
+				}
 			}
 		};
 	
@@ -74,6 +171,7 @@ PBS.KIDS.storybook.drawingPad = function (GLOBAL, PBS, options) {
 	that.y = options && (options.y !== undefined) ? options.y : 0;
 	that.width = options && (options.width !== undefined) ? options.width : 100 - that.x + "%";
 	that.height = options && (options.height !== undefined) ? options.height : 100 - that.y + "%";
+	that.dirty = true;
 	
 	that.parentWidth = options && (options.parentWidth !== undefined) ? options.parentWidth : 100;
 	that.parentHeight = options && (options.parentHeight !== undefined) ? options.parentHeight : 100;
@@ -85,11 +183,24 @@ PBS.KIDS.storybook.drawingPad = function (GLOBAL, PBS, options) {
 	
 	// Draw the text area
 	that.render = function () {
+	
+		var i;
 		 
 		 if (that.dirty) {
 		 	that.dirty = false;
 		 	
-		 	app.render();
+		 	//pad.render(); 	
+		 	for (i = 0; i < colorButtons.length; i += 1) {
+			 	colorButtons[i].render();
+		 	}
+		 	
+		 	for (i = 0; i < eraserButtons.length; i += 1) {
+			 	eraserButtons[i].render();
+		 	}
+		 	
+		 	for (i = 0; i < clearButtons.length; i += 1) {
+			 	clearButtons[i].render();
+		 	}
 		 }
 	};
 	

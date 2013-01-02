@@ -57,11 +57,21 @@ PBS.KIDS.storybook.config.pages.push({
 			color: "#333333",
 			size: 24,
 			font: "Droid Serif",
-			text: "Cyclers rotate through sprites on touch or click."
+			text: "Cyclers rotate through sprites on touch or click.",
+			sound: {
+				startTime: 0.4,
+				endTime: 0.45,
+				loop: false
+			},
 		},
 		{
 			type: "Cycler",
 			autoStart: true,
+			sound: {
+				startTime: 1,
+				endTime: 1.1,
+				loop: false
+			},
 			content: [
 				{
 					type: "Sprite",

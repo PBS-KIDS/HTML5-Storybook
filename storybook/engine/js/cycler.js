@@ -30,7 +30,13 @@ PBS.KIDS.storybook.cycler = function (GLOBAL, PBS, options) {
 
 						curItem = PBS.KIDS.storybook.sprite(GLOBAL, PBS, config);
 						curItem = PBS.KIDS.storybook.makeInteractionObject(GLOBAL, PBS, curItem);
-						curItem.addEventListener("PRESS", that.cycle);
+						curItem.addEventListener("PRESS", function(e) {
+							that.dispatchEvent("PRESS", {
+								x: e.x, 
+								y: e.y
+							});
+							that.cycle();
+						});
 						itemArray.push(curItem);
 					}
 				} else {

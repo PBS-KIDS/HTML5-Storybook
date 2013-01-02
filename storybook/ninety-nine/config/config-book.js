@@ -5,17 +5,12 @@
 
 PBS.KIDS.storybook.config = {
 	background: {
-		color: "#ababab",
-		url: "images/circles-background.png"
-	},
-	audio: {
-		enabled: true,
-		path: "http://www.williammalone.com/public/",
-		name: "001"	
+		color: "#43ff92"
+		
 	},
 	book: {
 		font: "Georgia",
-		startOnPage: 0,
+		startOnPage: 3,
 		pageWidth: 768,
 		pageHeight: 1024,
 		previousPageButton: {
@@ -41,13 +36,11 @@ PBS.KIDS.storybook.config = {
 		},
 		evenPageBackground: {
 			color: "#f9f9f9"
-		},
-		pageTurnDuration: 1000,
-		pageSlideDuration: 200
+		}
 	},
 	cover: {
 		background: {
-			url: "images/cover.jpg"
+			color: "#f9f9f9"
 		},
 		content: [
 			{
@@ -58,16 +51,7 @@ PBS.KIDS.storybook.config = {
 				color: "#222222",
 				size: 48,
 				font: "Droid Serif",
-				text: "Example Storybook"
-			},
-			{
-				type: "Sprite",
-				x: 25,
-				y: 80,
-				numFrames: 10,
-				frameDelay: 10,
-				loop: true,
-				url: "images/ball-roll.png"
+				text: "Ninety-Nine"
 			}
 		]
 	},

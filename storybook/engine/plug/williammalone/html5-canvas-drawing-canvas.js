@@ -32,7 +32,8 @@ WM.drawingCanvas = function (parentElement, options) {
 		curColor = (options && options.defaultColor) ? options.defaultColor : "#993333",
 		curSize = (options && options.radius) ? options.radius : 5,
 		curTool = "MARKER",
-		crayonTextureImage = new Image(),
+		textureImage = new Image(),
+		overlayImage = new Image(),
 		clickX = [],
 		clickY = [],
 		clickColor = [],
@@ -83,11 +84,10 @@ WM.drawingCanvas = function (parentElement, options) {
 				context.lineTo(clickX[i], clickY[i]);
 				
 				// Set the drawing color
-				if (clickTool[i] === "eraser") {
-					//context.globalCompositeOperation = "destination-out"; // To erase instead of draw over with white
-					context.strokeStyle = 'white';
+				if (clickTool[i].toUpperCase() === "ERASER") {
+					context.globalCompositeOperation = "destination-out"; // To erase 
 				} else {
-					//context.globalCompositeOperation = "source-over";	// To erase instead of draw over with white
+					context.globalCompositeOperation = "source-over";
 					context.strokeStyle = clickColor[i];
 				}
 				context.lineCap = "round";
@@ -96,16 +96,18 @@ WM.drawingCanvas = function (parentElement, options) {
 				context.stroke();
 			}
 			context.closePath();
+			
+			context.globalCompositeOperation = "source-over";
 
-			// Overlay a crayon texture (if the current tool is crayon)
-			//if (curTool === "crayon") {
-			//	context.globalAlpha = 0.4; // No IE support
-			//	context.drawImage(crayonTextureImage, 0, 0, canvasWidth, canvasHeight);
-			//}
-			context.globalAlpha = 1; // No IE support
+			// Draw the texture image
+			if (options.textureUrl) {
+				context.drawImage(textureImage, 0, 0);
+			}
 
 			// Draw the outline image
-			//context.drawImage(outlineImage, drawingAreaX, drawingAreaY, drawingAreaWidth, drawingAreaHeight);
+			if (options.overlayUrl) {
+				context.drawImage(overlayImage, 0, 0);
+			}
 		},
 
 		// Adds a point to the drawing array.
@@ -230,13 +232,17 @@ WM.drawingCanvas = function (parentElement, options) {
 			// Note: The above code is a workaround for IE 8 and lower. Otherwise we could have used:
 			//     context = document.getElementById('canvas').getContext("2d");
 
-			// Load images
-			/*
-			crayonTextureImage.onload = resourceLoaded;
-			crayonTextureImage.src = "images/crayon-texture.png";
-
-			outlineImage.onload = resourceLoaded;
-			outlineImage.src = "images/watermelon-duck-outline.png";*/
+			if (options.overlayUrl) {
+				totalLoadResources += 1;
+				overlayImage.onload = resourceLoaded;
+				overlayImage.src = options.overlayUrl;
+			}
+			
+			if (options.textureUrl) {
+				totalLoadResources += 1;
+				textureImage.onload = resourceLoaded;
+				textureImage.src = options.textureUrl;
+			}
 			
 			// 
 			resourceLoaded();
@@ -265,7 +271,17 @@ WM.drawingCanvas = function (parentElement, options) {
 	};
 	
 	that.clear = function () {
+	
+		clickX = [];
+		clickY = [];
+		clickColor = [];
+		clickTool = [];
+		clickSize = [];
+		clickDrag = [];
+		
 		clearCanvas();
+		
+		redraw();
 	};
 
 	init();

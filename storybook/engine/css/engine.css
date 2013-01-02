@@ -55,14 +55,6 @@ em {
 	
 }
 
-.slideTransition {
-	/* Animate page transitions */
-	transition: margin-left 0.25s linear;
-	-webkit-transition: margin-left 0.25s linear;
-	-moz-transition: margin-left 0.25s linear;
-	-ms-transition: margin-left 0.25s linear;
-}
-
 .pbsPageTurnContainer {
 
 	position: relative;
@@ -229,7 +221,7 @@ em {
 
 #loadingText {
 	text-align: center;
-	margin-top: 40%;
+	margin-top: 30%;
 	font-size: 40px;
 	width: 100%;
 }

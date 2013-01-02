@@ -131,7 +131,11 @@ PBS.KIDS.storybook.textArea = function (GLOBAL, PBS, options) {
 						// Set the contents of the paragraph
 						paragraphElements[i].innerHTML = paragraphContent[i];
 					}
+					
 				}
+				
+				// Listen to when the sprite is touched or clicked
+				that.addEventListener("PRESS", that.press);
 			}
 		};
 	
@@ -170,6 +174,10 @@ PBS.KIDS.storybook.textArea = function (GLOBAL, PBS, options) {
 		 if (that.dirty) {
 		 	that.dirty = false;
 		 }
+	};
+	
+	that.press = function (e) {
+console.log("PRESS");
 	};
 	
 	init();

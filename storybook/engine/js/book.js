@@ -27,6 +27,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		prevPageButtonSprite,
 		nextPageButtonSprite,
 		pageTurnDuration,
+		pageSlideDuration,
 		navigating = false,
 		cover,
 		pages = [],
@@ -105,7 +106,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 			if (page === pages[rightPageIndex] || page === cover) {
 				that.nextPage();
 			} else {
-				if (curOrientation === "PORTRAIT") {
+				if (curOrientation === "SINGLE-PAGE") {
 					that.nextPage();
 				}
 				// If the left page is dragged left in two-page layout then do nothing
@@ -120,7 +121,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 			if (page === pages[leftPageIndex]) {	
 				that.previousPage();
 			} else {
-				if (curOrientation === "PORTRAIT") {
+				if (curOrientation === "SINGLE-PAGE") {
 					that.previousPage();
 				}
 				// If the right page is dragged right in two-page layout then do nothing
@@ -151,9 +152,9 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		},
 		
 		fitWidth = function (containerWidth) {		
-
+console.log("fitWidth");
 			// Singe-Page layout
-			if (curOrientation === "PORTRAIT") {
+			if (curOrientation === "SINGLE-PAGE") {
 				// Scale the container element to zoom on one page
 				if (curPageIndex !== -1) {
 					containerWidth *= 1.8;
@@ -183,12 +184,12 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		},
 		
 		fitHeight = function (containerHeight) {
-
+console.log("fitHeight");
 			// Calculate the book margin from the minimum book margin percentage
 			bookMargin = containerHeight * minBookMargin;
 		
-			pagesContainerElement.style.height = GLOBAL.parseInt(containerHeight - bookMargin * 2) + "px";
-			bookContainerElement.style.height = GLOBAL.parseInt(containerHeight - bookMargin * 2) + "px";
+			pagesContainerElement.style.height = (containerHeight - bookMargin * 2) + "px";
+			bookContainerElement.style.height = (containerHeight - bookMargin * 2) + "px";
 			
 			// Determine the page dimensions based on the actual width of one of the page elements
 			pageElementHeight = rightPageContainerElement.offsetHeight;
@@ -209,15 +210,23 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 			
 			// Set the page turn dimensions (add a pixel to width to ensure its larger)
 			pageTurnContainerElement.style.width = GLOBAL.parseInt(pageElementWidth, 10) + 1 + "px";
-			pageTurnContainerElement.style.height = GLOBAL.parseInt(pageElementHeight, 10) + "px";
+			pageTurnContainerElement.style.height = pageElementHeight + "px";
 		},
 			
 		// Handles changes to the layout
 		updateLayout = function () {
+		
+			var orientation;
 
 			hideBrowserUi();		
 			// Update the current orientation
-			curOrientation = (storybookContainerElement.clientHeight > storybookContainerElement.clientWidth) ? "PORTRAIT" : "LANDSCAPE";
+			orientation = (storybookContainerElement.clientHeight > storybookContainerElement.clientWidth) ? "SINGLE-PAGE" : "TWO-PAGE";
+			
+			// If the orientation has changed dispatch an event with the current orientation
+			if (curOrientation !== orientation) {
+				that.dispatchEvent("LAYOUT_CHANGE", orientation);
+				curOrientation = orientation;
+			}
 			
 			fitWidth(storybookContainerElement.offsetWidth);
 							
@@ -235,7 +244,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		
 		// Position the book in the viewport
 		updatePosition = function () {
-		
+console.log("updatePosition");			
 			var containerWidth = storybookContainerElement.offsetWidth;
 
 			// Center the book vertically
@@ -243,14 +252,74 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 
 			// If the book is closed and the cover is displayed
 			if (curPageIndex === -1) {
+			
+				bookContainerElement.style["transition"] = "";
+				bookContainerElement.style["-webkit-transition"] = "";
+				bookContainerElement.style["-moz-transition"] = "";
+				bookContainerElement.style["-ms-transition"] = "";
+				bookContainerElement.style["-o-transition"] = "";
+					
 				// Center the cover
 				bookContainerElement.style.marginLeft = (containerWidth - pagesContainerElement.offsetWidth) / 2 + "px";
 			} else {
 			
-				if (curOrientation === "PORTRAIT") {
-					bookContainerElement.className = "slideTransition";
+				if (curOrientation === "SINGLE-PAGE") {
+					
+					bookContainerElement.style["transition"] = "margin-left " + pageSlideDuration / 1000 + "s linear";
+					bookContainerElement.style["-webkit-transition"] = "margin-left " + pageSlideDuration / 1000 + "s linear";
+					bookContainerElement.style["-moz-transition"] = "margin-left " + pageSlideDuration / 1000 + "s linear";
+					bookContainerElement.style["-ms-transition"] = "margin-left " + pageSlideDuration / 1000 + "s linear";
+					bookContainerElement.style["-o-transition"] = "margin-left " + pageSlideDuration / 1000 + "s linear";
+					
 					// If an current page index is an odd (left page)
 					if (curPageIndex % 2) {
+						
+						// Zoom on right page
+						bookContainerElement.style.marginLeft = -(bookMargin + pageElementWidth * 2 - containerWidth) + "px";
+					} else {
+						// Zoom on left page
+						bookContainerElement.style.marginLeft = bookMargin + "px";
+					}
+
+				} else {
+					bookContainerElement.className = "";
+					// Center the book horizontally
+					bookContainerElement.style.marginLeft = (containerWidth - pagesContainerElement.offsetWidth) / 2 + "px";
+				}
+			}
+		},
+		
+		// Position the book in the viewport
+		updatePosition2 = function () {
+console.log("updatePosition2");	
+			var containerWidth = storybookContainerElement.offsetWidth;
+
+			// Center the book vertically
+			bookContainerElement.style.marginTop = (storybookContainerElement.offsetHeight - bookContainerElement.offsetHeight) / 2 + "px";
+
+			// If the book is closed and the cover is displayed
+			if (curPageIndex === -1) {
+			
+				bookContainerElement.style["transition"] = "";
+				bookContainerElement.style["-webkit-transition"] = "";
+				bookContainerElement.style["-moz-transition"] = "";
+				bookContainerElement.style["-ms-transition"] = "";
+				bookContainerElement.style["-o-transition"] = "";
+
+				// Center the cover
+				bookContainerElement.style.marginLeft = (containerWidth - pagesContainerElement.offsetWidth) / 2 + "px";
+			} else {
+			
+				if (curOrientation === "SINGLE-PAGE") {
+					
+					bookContainerElement.style["transition"] = "margin-left " + pageTurnDuration / 1000 + "s linear";
+					bookContainerElement.style["-webkit-transition"] = "margin-left " + pageTurnDuration / 1000 + "s linear";
+					bookContainerElement.style["-moz-transition"] = "margin-left " + pageTurnDuration / 1000 + "s linear";
+					bookContainerElement.style["-ms-transition"] = "margin-left " + pageTurnDuration / 1000 + "s linear";
+					bookContainerElement.style["-o-transition"] = "margin-left " + pageTurnDuration / 1000 + "s linear";
+					
+					// If an current page index is an odd (left page)
+					if (targetPageIndex % 2) {
 						
 						// Zoom on right page
 						bookContainerElement.style.marginLeft = -(bookMargin + pageElementWidth * 2 - containerWidth) + "px";
@@ -339,7 +408,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				pages[rightPageIndex].navigationToComplete();
 			
 				// If single page layout
-				if (curOrientation === "PORTRAIT") {
+				if (curOrientation === "SINGLE-PAGE") {
 					// If the page is the left page
 					if (leftPageIndex === curPageIndex) {
 						if (pages[leftPageIndex].pageSound) {
@@ -378,7 +447,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				nextPageButtonElement.style.display = "block";	
 			} else {
 				// Hide page navigation buttons when at the beginning and end
-				if (curOrientation === "PORTRAIT") {
+				if (curOrientation === "SINGLE-PAGE") {
 					prevPageButtonElement.style.display = (targetPageIndex === -1) ? "none" : "block";
 					nextPageButtonElement.style.display = (targetPageIndex === pages.length - 1) ? "none" : "block";
 				} else {
@@ -424,11 +493,11 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				gradientElement.className = "pbsLeftPageTurnGradient";
 				pageTurnContainerElement.appendChild(gradientElement);
 				
-				pageTurnContainerElement.style["transform-origin"] = "right 0 0";
-				pageTurnContainerElement.style["-webkit-transform-origin"] = "right 0 0";
-				pageTurnContainerElement.style["-moz-transform-origin"] = "right 0 0";
-				pageTurnContainerElement.style["-ms-transform-origin"] = "right 0 0";
-				pageTurnContainerElement.style["-o-transform-origin"] = "right 0 0";
+				pageTurnContainerElement.style.transformOrigin = "right top";
+				pageTurnContainerElement.style.webkitTransformOrigin = "right top";
+				pageTurnContainerElement.style.mozTransformOrigin = "right top";
+				pageTurnContainerElement.style.msTransformOrigin = "right top";
+				pageTurnContainerElement.style.oTransformOrigin = "right top";
 
 			// If turning back
 			} else {
@@ -458,11 +527,11 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				gradientElement.className = "pbsRightPageTurnGradient";
 				pageTurnContainerElement.appendChild(gradientElement);
 				
-				pageTurnContainerElement.style["transform-origin"] = "left 0 0";
-				pageTurnContainerElement.style["-webkit-transform-origin"] = "left 0 0";
-				pageTurnContainerElement.style["-moz-transform-origin"] = "left 0 0";
-				pageTurnContainerElement.style["-ms-transform-origin"] = "left 0 0";
-				pageTurnContainerElement.style["-o-transform-origin"] = "left 0 0";
+				pageTurnContainerElement.style.transformOrigin = "left top";
+				pageTurnContainerElement.style.webkitTransformOrigin = "left top";
+				pageTurnContainerElement.style.mozTransformOrigin = "left top";
+				pageTurnContainerElement.style.msTransformOrigin = "left top";
+				pageTurnContainerElement.style.oTransformOrigin = "left top";
 			}
 			
 			gradientElement.style.opacity = 1;
@@ -590,7 +659,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				// If turning forward
 				if (targetPageIndex > curPageIndex) {
 					// If in two-page layout or in single page layout and the right page
-					if (curOrientation === "LANDSCAPE" || curPageIndex % 2) {
+					if (curOrientation === "TWO-PAGE" || curPageIndex % 2) {
 	
 						// Create a container for the turning page
 						pageContainerElement = GLOBAL.document.createElement("div");
@@ -640,11 +709,11 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 						gradientElement.style["-ms-transition"] = "opacity " + pageTurnDuration / 2 / 1000 + "s linear";
 						gradientElement.style["-o-transition"] = "opacity " + pageTurnDuration / 2 / 1000 + "s linear";
 
-						pageTurnContainerElement.style["transform-origin"] = "left 0 0";
-						pageTurnContainerElement.style["-webkit-transform-origin"] = "left 0 0";
-						pageTurnContainerElement.style["-moz-transform-origin"] = "left 0 0";
-						pageTurnContainerElement.style["-ms-transform-origin"] = "left 0 0";
-						pageTurnContainerElement.style["-o-transform-origin"] = "left 0 0";
+						pageTurnContainerElement.style.transformOrigin = "left top";
+						pageTurnContainerElement.style.webkitTransformOrigin = "left top";
+						pageTurnContainerElement.style.mozTransformOrigin = "left top";
+						pageTurnContainerElement.style.msTransformOrigin = "left top";
+						pageTurnContainerElement.style.oTransformOrigin = "left top";
 						
 						GLOBAL.setTimeout(function () {
 							pageTurnContainerElement.style["transform"] = "scale(0, 1)";
@@ -658,6 +727,8 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 						
 						pageTurnContainerElement.style.display = "block";
 						
+						updatePosition2();
+						
 						navigating = true;
 						GLOBAL.setTimeout(onNavigateMiddle, pageTurnDuration / 2);
 					} else {
@@ -666,7 +737,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				// If turning back
 				} else {
 					// If in two-page layout or in single page layout and the current page is left page
-					if (curOrientation === "LANDSCAPE" || curPageIndex % 2 === 0) {
+					if (curOrientation === "TWO-PAGE" || curPageIndex % 2 === 0) {
 						
 						// Create a container for the turning page
 						pageContainerElement = GLOBAL.document.createElement("div");
@@ -705,11 +776,11 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 						gradientElement.style["-ms-transition"] = "opacity " + pageTurnDuration / 2 / 1000 + "s linear";
 						gradientElement.style["-o-transition"] = "opacity " + pageTurnDuration / 2 / 1000 + "s linear";
 
-						pageTurnContainerElement.style["transform-origin"] = "right 0 0";
-						pageTurnContainerElement.style["-webkit-transform-origin"] = "right 0 0";
-						pageTurnContainerElement.style["-moz-transform-origin"] = "right 0 0";
-						pageTurnContainerElement.style["-ms-transform-origin"] = "right 0 0";
-						pageTurnContainerElement.style["-o-transform-origin"] = "right 0 0";
+						pageTurnContainerElement.style.transformOrigin = "right top";
+						pageTurnContainerElement.style.webkitTransformOrigin = "right top";
+						pageTurnContainerElement.style.mozTransformOrigin = "right top";
+						pageTurnContainerElement.style.msTransformOrigin = "right top";
+						pageTurnContainerElement.style.oTransformOrigin = "right top";
 						
 						GLOBAL.setTimeout(function () {
 							pageTurnContainerElement.style["transform"] = "scale(0, 1)";
@@ -722,6 +793,8 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 						}, 0);
 						
 						pageTurnContainerElement.style.display = "block";
+						
+						updatePosition2();
 						
 						navigating = true;
 						GLOBAL.setTimeout(onNavigateMiddle, pageTurnDuration / 2);
@@ -859,8 +932,51 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 								}
 							}
 						}
+						
+						
 					}
-				}
+					// If the type is Drawing Pad
+					if (config.pages[i].content[j].type.toUpperCase() === "DRAWINGPAD") {
+						
+						if (config.pages[i].content[j].overlayUrl) {
+							config.pages[i].content[j].overlayResource = resourceLoader.addToQueue(config.pages[i].content[j].overlayUrl);
+						}
+						if (config.pages[i].content[j].textureUrl) {
+							config.pages[i].content[j].textureResource = resourceLoader.addToQueue(config.pages[i].content[j].textureUrl);
+						}
+						
+						for (key in config.pages[i].content[j]) {
+							if (key === "colorButtons") {
+								for (k = 0; k < config.pages[i].content[j].colorButtons.length; k += 1) {
+									for (key2 in config.pages[i].content[j].colorButtons[k]) {
+										if (key2 === "url") {
+											// Add a new resource object with the url
+											config.pages[i].content[j].colorButtons[k].resource = resourceLoader.addToQueue(config.pages[i].content[j].colorButtons[k].url);
+										}
+									}
+								}
+							} else if (key === "clearButtons") {
+								for (k = 0; k < config.pages[i].content[j].clearButtons.length; k += 1) {
+									for (key2 in config.pages[i].content[j].clearButtons[k]) {
+										if (key2 === "url") {
+											// Add a new resource object with the url
+											config.pages[i].content[j].clearButtons[k].resource = resourceLoader.addToQueue(config.pages[i].content[j].clearButtons[k].url);
+										}
+									}
+								}
+							} else if (key === "eraserButtons") {
+								for (k = 0; k < config.pages[i].content[j].eraserButtons.length; k += 1) {
+									for (key2 in config.pages[i].content[j].eraserButtons[k]) {
+										if (key2 === "url") {
+											// Add a new resource object with the url
+											config.pages[i].content[j].eraserButtons[k].resource = resourceLoader.addToQueue(config.pages[i].content[j].eraserButtons[k].url);
+										}
+									}
+								}
+							}					
+						}
+					}
+				}				
 			}
 		},
 		
@@ -1008,6 +1124,8 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				createResources();
 				
 				pageTurnDuration = (bookConfig && bookConfig.pageTurnDuration !== undefined) ? bookConfig.pageTurnDuration : 1000;
+				pageSlideDuration = (bookConfig && bookConfig.pageSlideDuration !== undefined) ? bookConfig.pageSlideDuration : 250;
+				
 				pageTurnContainerElement.style["transition"] = "transform " + pageTurnDuration / 2 / 1000 + "s linear";
 				pageTurnContainerElement.style["-webkit-transition"] = "-webkit-transform " + pageTurnDuration / 2 / 1000 + "s linear";
 				pageTurnContainerElement.style["-moz-transition"] = "-moz-transform " + pageTurnDuration / 2 / 1000 + "s linear";
@@ -1105,7 +1223,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 	
 		var targetPageIndex;
 
-		if (curOrientation === "PORTRAIT") {
+		if (curOrientation === "SINGLE-PAGE") {
 			// Go forward one page
 			targetPageIndex = curPageIndex + 1;
 		} else {
@@ -1130,7 +1248,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		
 		var targetPageIndex;
 		
-		if (curOrientation === "PORTRAIT") {
+		if (curOrientation === "SINGLE-PAGE") {
 			// Go back one page
 			targetPageIndex = curPageIndex - 1;
 		} else {

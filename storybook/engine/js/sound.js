@@ -11,6 +11,7 @@ PBS.KIDS.storybook.sound = function (startTime, endTime, options) {
 	
 	that.loop = (options && options.loop) ? options.loop : false;
 	that.name = (options && options.name) ? options.name : null;
+	that.persist = (options && options.persist) ? options.persist : false;
 	that.startTime = startTime;
 	that.endTime = endTime;
 	

@@ -63,37 +63,6 @@ PBS.KIDS.storybook.config.pages.push({
 			size: 28,
 			font: "Droid Serif",
 			text: "A page background color can be specified instead of an image."
-		},
-		{
-			type: "DrawingPad",
-			x: 0,
-			y: 0,
-			width: "100%",
-			height: "50%",
-			defaultColor: "#787629",
-			radius: 15,
-			colors: [
-				{
-					color: "red",
-					x: 0,
-					y: 0,
-					url: "images/red-button.png"
-				}, {
-					color: "blue",
-					x: 30,
-					y: 0,
-					url: "images/blue-button.png"
-				}
-			]
-		},
-		{
-			type: "DrawingPad",
-			x: 0,
-			y: 60,
-			width: 100,
-			height: 30,
-			defaultColor: "#669966",
-			radius: 30
 		}
 	]
 });
