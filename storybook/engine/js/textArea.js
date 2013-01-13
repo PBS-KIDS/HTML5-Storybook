@@ -72,6 +72,9 @@ PBS.KIDS.storybook.textArea = function (GLOBAL, PBS, options) {
 			
 				// Create the text area element
 				element.className = "pbsTextArea";
+				if (options.className) {
+					element.className += " " + options.className;
+				}
 				element.style.textAlign = (options.align !== undefined) ? options.align : "center";
 				element.style.fontFamily = (options.font !== undefined) ? options.font : "";
 				element.style.fontSize = (options.size !== undefined) ? options.size + "em" : "1em";

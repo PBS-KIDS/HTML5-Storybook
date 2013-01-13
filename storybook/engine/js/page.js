@@ -18,6 +18,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 		textAreaArray = [],
 		spriteArray = [],
 		cyclerArray = [],
+		drawingPadArray = [],
 		contentArray = [],
 		dirty = true,
 		pageView,
@@ -134,6 +135,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 					config.content[i].parentElement = element;
 					config.content[i].parentWidth = width;
 					config.content[i].parentHeight = height;
+					config.content[i].className = "pbsPage" + pageNum + "TextArea" + (textAreaArray.length + 1);
 					
 					curTextArea = sb.textArea(GLOBAL, PBS, config.content[i]);
 					
@@ -152,6 +154,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 					config.content[i].parentElement = element;
 					config.content[i].parentWidth = width;
 					config.content[i].parentHeight = height;
+					config.content[i].className = "pbsPage" + pageNum + "Sprite" + (spriteArray.length + 1);
 					
 					curSprite = sb.sprite(GLOBAL, PBS, config.content[i]);
 					curSprite = sb.makeInteractionObject(GLOBAL, PBS, curSprite);
@@ -175,6 +178,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 					config.content[i].parentElement = element;
 					config.content[i].parentWidth = width;
 					config.content[i].parentHeight = height;
+					config.content[i].className = "pbsPage" + pageNum + "Cycler" + (cyclerArray.length + 1);
 					
 					curCycler = sb.cycler(GLOBAL, PBS, config.content[i]);
 					
@@ -197,6 +201,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 					config.content[i].parentElement = element;
 					config.content[i].parentWidth = width;
 					config.content[i].parentHeight = height;
+					config.content[i].className = "pbsPage" + pageNum + "DrawingPad" + (cyclerArray.length + 1);
 							
 					curDrawingPad = sb.drawingPad(GLOBAL, PBS, config.content[i]);
 					curDrawingPad = sb.makeInteractionObject(GLOBAL, PBS, curDrawingPad);
@@ -206,6 +211,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 						curDrawingPad = sb.makeAudible(GLOBAL, PBS, audioPlayer, curDrawingPad, config.content[i].sound);
 					}
 					
+					drawingPadArray.push(curDrawingPad);
 					contentArray.push(curDrawingPad);
 					break;
 					

@@ -124,6 +124,9 @@ PBS.KIDS.storybook.sprite = function (GLOBAL, PBS, options) {
 	spec.width = 99 + "px";
 	spec.height = 99 + "px";
 	spec.className = "pbsCanvas pbsSprite";
+	if (options.className) {
+		spec.className += " " + options.className;
+	}
 	if (options && options.className) {	
 		spec.className += " " + options.className
 	}

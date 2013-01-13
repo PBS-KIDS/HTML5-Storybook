@@ -145,28 +145,32 @@ WM.drawingCanvas = function (parentElement, options) {
 			var press = function (e) {
 					
 				var pos = getElementPosition(this),
-					mouseX,
-					mouseY;
+					mouseX = e.targetTouches ? e.targetTouches[0].pageX : e.pageX,
+					mouseY = e.targetTouches ? e.targetTouches[0].pageY : e.pageY,
+					drawX,
+					drawY;
 				
-				mouseX = (e.pageX - pos.x) * canvasWidth / this.offsetWidth;
-				mouseY = (e.pageY - pos.y) * canvasHeight / this.offsetHeight;
+				drawX = (mouseX - pos.x) * canvasWidth / this.offsetWidth;
+				drawY = (mouseY - pos.y) * canvasHeight / this.offsetHeight;
 
 				paint = true;
-				addClick(mouseX, mouseY, false);
+				addClick(drawX, drawY, false);
 				redraw();
 			},
 
 			drag = function (e) {
 				
 				var pos = getElementPosition(this),
-					mouseX,
-					mouseY;
+					mouseX = e.targetTouches ? e.targetTouches[0].pageX : e.pageX,
+					mouseY = e.targetTouches ? e.targetTouches[0].pageY : e.pageY,
+					drawX,
+					drawY;
 				
-				mouseX = (e.pageX - pos.x) * canvasWidth / this.offsetWidth;
-				mouseY = (e.pageY - pos.y) * canvasHeight / this.offsetHeight;
+				drawX = (mouseX - pos.x) * canvasWidth / this.offsetWidth;
+				drawY = (mouseY - pos.y) * canvasHeight / this.offsetHeight;
 					
 				if (paint) {
-					addClick(mouseX, mouseY, true);
+					addClick(drawX, drawY, true);
 					redraw();
 				}
 				
@@ -177,18 +181,20 @@ WM.drawingCanvas = function (parentElement, options) {
 			},
 
 			release = function () {
+
 				paint = false;
 				redraw();
 			},
 
 			cancel = function () {
+
 				paint = false;
 			};
 
 			// Add mouse event listeners to canvas element
 			that.canvas.addEventListener("mousedown", press, false);
 			that.canvas.addEventListener("mousemove", drag, false);
-			that.canvas.addEventListener("mouseup", release);
+			that.canvas.addEventListener("mouseup", release, false);
 			that.canvas.addEventListener("mouseout", cancel, false);
 
 			// Add touch event listeners to canvas element

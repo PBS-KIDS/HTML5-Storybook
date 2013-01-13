@@ -10,7 +10,8 @@ PBS.KIDS.storybook.config.pages.push({
 	},
 	sound: {
 		startTime: 0,
-		endTime: 10
+		endTime: 10,
+		persist: false
 	},
 	content: [
 		{
@@ -186,7 +187,6 @@ PBS.KIDS.storybook.config.pages.push({
 			],
 			clearButtons: [
 				{
-					paintColor: "#ffdc00",
 					x: "680px",
 					y: "120px",
 					url: "images/clear-button.png"

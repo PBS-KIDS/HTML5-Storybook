@@ -50,6 +50,9 @@ PBS.KIDS.storybook.drawingPad = function (GLOBAL, PBS, options) {
 			
 				// Create the drawing pad element
 				element.className = "pbsDrawingPad";
+				if (options.className) {
+					element.className += " " + options.className;
+				}
 				
 				// e.g. 90px
 				if (sb.isInPixelUnits(that.width)) {
@@ -97,6 +100,9 @@ PBS.KIDS.storybook.drawingPad = function (GLOBAL, PBS, options) {
 									options.colorButtons[i].parentElement = parentElement;
 									options.colorButtons[i].parentWidth = that.parentWidth;
 									options.colorButtons[i].parentHeight = that.parentHeight;
+									if (options.className) {
+										options.colorButtons[i].className = options.className + "ColorButton" + (i + 1);
+									}
 									
 									// Listen for image load
 									options.colorButtons[i].resource.image.addEventListener("load", resourceLoaded);
@@ -121,6 +127,9 @@ PBS.KIDS.storybook.drawingPad = function (GLOBAL, PBS, options) {
 									options.clearButtons[i].parentElement = parentElement;
 									options.clearButtons[i].parentWidth = that.parentWidth;
 									options.clearButtons[i].parentHeight = that.parentHeight;
+									if (options.className) {
+										options.clearButtons[i].className = options.className + "ClearButton" + (i + 1);
+									}
 									
 									// Listen for image load
 									options.clearButtons[i].resource.image.addEventListener("load", resourceLoaded);
@@ -141,6 +150,9 @@ PBS.KIDS.storybook.drawingPad = function (GLOBAL, PBS, options) {
 									options.eraserButtons[i].parentElement = parentElement;
 									options.eraserButtons[i].parentWidth = that.parentWidth;
 									options.eraserButtons[i].parentHeight = that.parentHeight;
+									if (options.className) {
+										options.eraserButtons[i].className = options.className + "EraserButton" + (i + 1);
+									}
 									
 									// Listen for image load
 									options.eraserButtons[i].resource.image.addEventListener("load", resourceLoaded);

@@ -27,6 +27,9 @@ PBS.KIDS.storybook.cycler = function (GLOBAL, PBS, options) {
 						config.parentElement = options.parentElement;
 						config.parentWidth = options.parentWidth;
 						config.parentHeight = options.parentHeight;
+						if (options.className) {
+							config.className = options.className + "Sprite" + (i + 1);
+						}
 
 						curItem = PBS.KIDS.storybook.sprite(GLOBAL, PBS, config);
 						curItem = PBS.KIDS.storybook.makeInteractionObject(GLOBAL, PBS, curItem);
