@@ -90,7 +90,7 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 		// Read the page background properties from the config
 		// If a background image or color is specified for this page
 		if (config.background.resource || config.background.color) {
-			// Use the specific page resource or color
+		// Use the specific page resource or color
 		// If odd default page background is specified and the page is odd
 		} else if (options.bookConfig.oddPageBackground && pageNum % 2 && options.bookConfig.oddPageBackground.resource) {
 			config.background.resource = options.bookConfig.oddPageBackground.resource;

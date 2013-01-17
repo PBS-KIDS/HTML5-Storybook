@@ -23,7 +23,6 @@ em {
 /* Engine Container */
 
 #pbsStorybookContainer {
-
 	/* Keep all elements within the pages */
 	overflow-x: hidden;
 	
@@ -51,12 +50,10 @@ em {
 
 #pbsBookContainer {
 	width: 100%; 
-	
-	
+
 }
 
 .pbsPageTurnContainer {
-
 	position: relative;
 	
 	/* Keep all elements within the pages */
@@ -95,7 +92,6 @@ em {
 }
 
 .pbsLeftPageTurnGradient {
-
 	/* Represent page edge */
 	border-left: 4px #000 solid;
 
@@ -198,18 +194,6 @@ em {
 	/* Nav container will have absolute buttons so it does not need dimensions */
 	width: 0;
 	height: 0;
-}
-
-.pbsPageButton {
-	
-}
-
-#pbsPrevPageButton {
-	
-}
-
-#pbsNextPageButton {
-	
 }
 
 /* Loading */

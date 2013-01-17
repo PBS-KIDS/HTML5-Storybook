@@ -19,55 +19,53 @@ PBS.KIDS.storybook.audioPlayer = function (GLOBAL, PBS, src, options) {
 		completeInterval,
 
 		onPlay = function () {	
-			console.log("onPlay");
+
 		},
 		
 		onPause = function () {	
-			console.log("onPause");
+
 		},
 		
 		onCanPlay = function () {	
-			console.log("onCanPlay");
 			
 			if (!playable) {
 				playable = true;
-				PBS.KIDS.storybook.debug("Audio Load Started.");
+				//PBS.KIDS.storybook.debug("Audio Load Started.");
 				that.dispatchEvent("LOAD_STARTED");
 			}
 		},
 		
 		onCanPlayThrough = function () {	
-			console.log("onCanPlayThrough");
 			
 			if (!playable) {
 				playable = true;
-				PBS.KIDS.storybook.debug("Audio Load Started.");
+				//PBS.KIDS.storybook.debug("Audio Load Started.");
 				that.dispatchEvent("LOAD_STARTED");
 			}
 		},
 		
 		onLoadedData = function () {	
-			console.log("onLoadedData");
+
 		},
 		
 		onLoadedMetadata = function () {	
-			console.log("onLoadedMetadata");
+
 		},
 		
 		onProgress = function () {	
-			console.log("onProgress");
+
 		},
 		
 		onEnded = function () {	
-			console.log("onEnded");
+
 		},
 		
 		onStalled = function () {	
-			console.log("onStalled");
+
 		},
 		
 		onError = function (e) {	
-			console.log("onError: " + e.message);
+			PBS.KIDS.storybook.debug("audioPlayer.onError: " + e.message);
 		},
 		
 		init = function () {
@@ -98,6 +96,19 @@ PBS.KIDS.storybook.audioPlayer = function (GLOBAL, PBS, src, options) {
 				} else {
 					return false;
 				}
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@				
+// TODO: Remove
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+				//audioElement.volume = 0;
+				
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+// Muted the audio player for the presentation
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 				
 				// Initialization was successful
 				return true;
@@ -125,7 +136,7 @@ PBS.KIDS.storybook.audioPlayer = function (GLOBAL, PBS, src, options) {
 				if (curLoadTime && !isNaN(curLoadPercentage) && loadPercentage !== curLoadPercentage) {
 					loadPercentage = curLoadPercentage;
 					that.dispatchEvent("LOAD_PERCENTAGE_CHANGE");
-					PBS.KIDS.storybook.debug("Audio Load Percentage: " + curLoadPercentage.toFixed(2) + "%");
+					//PBS.KIDS.storybook.debug("Audio Load Percentage: " + curLoadPercentage.toFixed(2) + "%");
 				}
 				
 				// Dispatch a load complete event if the difference between the current load time and the audio duration is very small                                                  
@@ -137,7 +148,6 @@ PBS.KIDS.storybook.audioPlayer = function (GLOBAL, PBS, src, options) {
 			}, 1000);
 			
 			audioElement.src = src;
-			console.log("src: " + src);
 			
 			// Play and then pause immediately after to initiate a load but not hear the audio
 			audioElement.play();
@@ -156,7 +166,7 @@ PBS.KIDS.storybook.audioPlayer = function (GLOBAL, PBS, src, options) {
 		checkIfComplete = function () {
 		
 			if (!currentSound) {
-				PBS.KIDS.storybook.debug("Current sound variable is not defined and the complete timer is still running.");
+				//PBS.KIDS.storybook.debug("Current sound variable is not defined and the complete timer is still running.");
 				GLOBAL.clearInterval(completeInterval);
 				return;
 			}
@@ -165,7 +175,7 @@ PBS.KIDS.storybook.audioPlayer = function (GLOBAL, PBS, src, options) {
 
 			// If the scrubber position is greater or equal to the end time
 			if (audioElement.currentTime >= currentSound.endTime) {
-				PBS.KIDS.storybook.log("Sound Complete");
+				//PBS.KIDS.storybook.log("Sound Complete");
 
 				if (currentSound.loop === true) {
 					PBS.KIDS.storybook.log("Loop Sound");
@@ -213,7 +223,7 @@ PBS.KIDS.storybook.audioPlayer = function (GLOBAL, PBS, src, options) {
 		
 		// If a sound is already playing see if it can be interrupted
 		if (currentSound && currentSound.persist) {
-			PBS.KIDS.storybook.debug("Current sound cannot be interrupted. This sound will not play.");
+			//PBS.KIDS.storybook.debug("Current sound cannot be interrupted. This sound will not play.");
 			return;
 		}
 		

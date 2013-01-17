@@ -32,7 +32,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		cover,
 		pages = [],
 		bookMargin,
-		minBookMargin = 0.02,
+		minBookMargin = config.book.margin !== undefined ? config.book.margin : 2,
 		audioLoadInitiated = false,
 		audioLoadedEnough = false,
 		resourceLoadComplete = false,
@@ -62,7 +62,6 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 							// Update cover
 							cover.update();
 						} else {
-	// TODO: possibly don't update if page is not fully visible in single-page layout (if page config option) Update on both pages by default
 							// Update visible pages
 							if (pages[leftPageIndex]) {
 								pages[leftPageIndex].update();
@@ -152,7 +151,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		},
 		
 		fitWidth = function (containerWidth) {		
-console.log("fitWidth");
+
 			// Singe-Page layout
 			if (curOrientation === "SINGLE-PAGE") {
 				// Scale the container element to zoom on one page
@@ -162,7 +161,7 @@ console.log("fitWidth");
 			}
 			
 			// Calculate the book margin from the minimum book margin percentage
-			bookMargin = containerWidth * minBookMargin;
+			bookMargin = containerWidth * (minBookMargin / 100);
 
 			// Set the book to the container width minus the margin
 			bookContainerElement.style.width = GLOBAL.parseInt(containerWidth - bookMargin * 2, 10) + "px";		
@@ -184,9 +183,9 @@ console.log("fitWidth");
 		},
 		
 		fitHeight = function (containerHeight) {
-console.log("fitHeight");
+
 			// Calculate the book margin from the minimum book margin percentage
-			bookMargin = containerHeight * minBookMargin;
+			bookMargin = containerHeight * (minBookMargin / 100);
 		
 			pagesContainerElement.style.height = (containerHeight - bookMargin * 2) + "px";
 			bookContainerElement.style.height = (containerHeight - bookMargin * 2) + "px";
@@ -231,7 +230,7 @@ console.log("fitHeight");
 			fitWidth(storybookContainerElement.offsetWidth);
 							
 			// If the book is larger than the container
-			if (bookContainerElement.offsetHeight > storybookContainerElement.offsetHeight * (1 - minBookMargin * 2)) {	
+			if (bookContainerElement.offsetHeight > storybookContainerElement.offsetHeight * (1 - (minBookMargin / 100) * 2)) {	
 				fitHeight(storybookContainerElement.offsetHeight);
 			}
 
@@ -244,7 +243,7 @@ console.log("fitHeight");
 		
 		// Position the book in the viewport
 		updatePosition = function () {
-console.log("updatePosition");			
+		
 			var containerWidth = storybookContainerElement.offsetWidth;
 
 			// Center the book vertically
@@ -291,7 +290,7 @@ console.log("updatePosition");
 		
 		// Position the book in the viewport
 		updatePosition2 = function () {
-console.log("updatePosition2");	
+
 			var containerWidth = storybookContainerElement.offsetWidth;
 
 			// Center the book vertically
@@ -567,7 +566,7 @@ console.log("updatePosition2");
 				return;
 			}
 			
-			sb.debug("Navigate to page " + pageIndex);	
+			sb.log("Navigate to page " + (pageIndex + 1));	
 				
 			// If no previous page indices or duration is zero then do not animate
 			if (curLeftPageIndex === undefined || curRightPageIndex === undefined || pageTurnDuration === 0) {
@@ -851,7 +850,6 @@ console.log("updatePosition2");
 		
 			var i, j, k, key, key2;
 			
-			// TODO: possibly search the whole configuration file via DFS, BFS or similar
 			// Create resource objects but don't load them yet.
 			for (key in bookConfig.pageBackground) {
 				if (bookConfig.pageBackground.hasOwnProperty(key)) {
@@ -1195,8 +1193,7 @@ console.log("updatePosition2");
 	};
 		
 	that.onOrientationChange = function () {
-		
-// TODO: Check if window.resize gets called on orientation change. If it is the following is unneccessary.
+
 		updateLayout();
 	};
 	

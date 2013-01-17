@@ -5,9 +5,8 @@
 
 PBS.KIDS.storybook.config = {
 	background: {
-		color: "#ffffff"
-		/*color: "#ababab",
-		url: "images/circles-background.png"*/
+		color: "#ababab",
+		url: "images/circles-background.png"
 	},
 	audio: {
 		enabled: true,
@@ -16,7 +15,7 @@ PBS.KIDS.storybook.config = {
 	},
 	book: {
 		font: "Georgia",
-		startOnPage: 24,
+		startOnPage: 0,
 		pageWidth: 768,
 		pageHeight: 1024,
 		previousPageButton: {
