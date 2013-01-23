@@ -290,7 +290,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		
 		// Position the book in the viewport
 		updatePosition2 = function () {
-
+	
 			var containerWidth = storybookContainerElement.offsetWidth;
 
 			// Center the book vertically
@@ -442,16 +442,28 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 			// If the current page is the cover
 			if (targetPageIndex === -1) {
 				// Turn off the previous page button
-				prevPageButtonElement.style.display = "none";
-				nextPageButtonElement.style.display = "block";	
+				if (prevPageButtonElement) {
+					prevPageButtonElement.style.display = "none";
+				}
+				if (nextPageButtonElement) {
+					nextPageButtonElement.style.display = "block";	
+				}
 			} else {
 				// Hide page navigation buttons when at the beginning and end
 				if (curOrientation === "SINGLE-PAGE") {
-					prevPageButtonElement.style.display = (targetPageIndex === -1) ? "none" : "block";
-					nextPageButtonElement.style.display = (targetPageIndex === pages.length - 1) ? "none" : "block";
+					if (prevPageButtonElement) {
+						prevPageButtonElement.style.display = (targetPageIndex === -1) ? "none" : "block";
+					}
+					if (nextPageButtonElement) {
+						nextPageButtonElement.style.display = (targetPageIndex === pages.length - 1) ? "none" : "block";
+					}
 				} else {
-					prevPageButtonElement.style.display = (leftPageIndex === -1) ? "none" : "block";
-					nextPageButtonElement.style.display = (rightPageIndex === pages.length - 1) ? "none" : "block";
+					if (prevPageButtonElement) {
+						prevPageButtonElement.style.display = (leftPageIndex === -1) ? "none" : "block";
+					}
+					if (nextPageButtonElement) {
+						nextPageButtonElement.style.display = (rightPageIndex === pages.length - 1) ? "none" : "block";
+					}
 				}
 			}
 			
@@ -566,7 +578,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				return;
 			}
 			
-			sb.log("Navigate to page " + (pageIndex + 1));	
+			sb.log("Navigate to page " + (pageIndex + 1));		
 				
 			// If no previous page indices or duration is zero then do not animate
 			if (curLeftPageIndex === undefined || curRightPageIndex === undefined || pageTurnDuration === 0) {
@@ -576,7 +588,9 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 			targetPageIndex = pageIndex;
 			
 			// Stop any sound that may be playing
-			audioPlayer.stop();
+			if (audioPlayer) {
+				audioPlayer.stop();
+			}
 			
 			// Clear page turn container
 			sb.removeAllChildren(pageTurnContainerElement);
@@ -591,9 +605,13 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				rightPageIndex = targetPageIndex + 1;
 			}
 
-			// Turn off the previous page button
-			prevPageButtonElement.style.display = "none";
-			nextPageButtonElement.style.display = "none";
+			// Turn off the page buttons
+			if (prevPageButtonElement) {
+				prevPageButtonElement.style.display = "none";
+			}
+			if (nextPageButtonElement) {
+				nextPageButtonElement.style.display = "none";
+			}
 
 			// Insert page elements of two pages that should be visible into the page containers
 			// If the page is not changing (happens first time)
@@ -833,14 +851,18 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 			});
 			
 			// Draw previous page button and add event listener
-			prevPageButtonSprite.update();
-			prevPageButtonSprite.render();
-			prevPageButtonSprite.addEventListener("PRESS", that.previousPage);
+			if (prevPageButtonSprite) {
+				prevPageButtonSprite.update();
+				prevPageButtonSprite.render();
+				prevPageButtonSprite.addEventListener("PRESS", that.previousPage);
+			}
 			
 			// Draw next page button and add event listener
-			nextPageButtonSprite.update();
-			nextPageButtonSprite.render();
-			nextPageButtonSprite.addEventListener("PRESS", that.nextPage);
+			if (nextPageButtonSprite) {
+				nextPageButtonSprite.update();
+				nextPageButtonSprite.render();
+				nextPageButtonSprite.addEventListener("PRESS", that.nextPage);
+			}
 			
 			loop();
 		},
@@ -850,6 +872,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		
 			var i, j, k, key, key2;
 			
+			// TODO: possibly search the whole configuration file via DFS, BFS or similar
 			// Create resource objects but don't load them yet.
 			for (key in bookConfig.pageBackground) {
 				if (bookConfig.pageBackground.hasOwnProperty(key)) {
@@ -1099,25 +1122,29 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 	            navElement.className = "pbsStorybookNav";
 	            // Don't add to DOM until loaded
 	            
-	            prevPageButtonElement = GLOBAL.document.createElement("div");
-	            prevPageButtonElement.id = "pbsPrevPageButton";
-				prevPageButtonElement.className = "pbsPageButton";
-				// Create previous button sprite
-				bookConfig.previousPageButton.parentElement = prevPageButtonElement;
-				bookConfig.previousPageButton.resource = resourceLoader.addToQueue(bookConfig.previousPageButton.url);
-				prevPageButtonSprite = sb.sprite(GLOBAL, PBS, bookConfig.previousPageButton);
-				prevPageButtonSprite = sb.makeInteractionObject(GLOBAL, PBS, prevPageButtonSprite);
-				navElement.appendChild(prevPageButtonElement);
+	            if (bookConfig.previousPageButton) {
+		            prevPageButtonElement = GLOBAL.document.createElement("div");
+		            prevPageButtonElement.id = "pbsPrevPageButton";
+					prevPageButtonElement.className = "pbsPageButton";
+					// Create previous button sprite
+					bookConfig.previousPageButton.parentElement = prevPageButtonElement;
+					bookConfig.previousPageButton.resource = resourceLoader.addToQueue(bookConfig.previousPageButton.url);
+					prevPageButtonSprite = sb.sprite(GLOBAL, PBS, bookConfig.previousPageButton);
+					prevPageButtonSprite = sb.makeInteractionObject(GLOBAL, PBS, prevPageButtonSprite);
+					navElement.appendChild(prevPageButtonElement);
+				}
 				
-				nextPageButtonElement = GLOBAL.document.createElement("div");
-	            nextPageButtonElement.id = "pbsNextPageButton";
-				nextPageButtonElement.className = "pbsPageButton";
-				// Create next button sprite
-				bookConfig.nextPageButton.parentElement = nextPageButtonElement;
-				bookConfig.nextPageButton.resource = resourceLoader.addToQueue(bookConfig.nextPageButton.url);
-				nextPageButtonSprite = sb.sprite(GLOBAL, PBS, bookConfig.nextPageButton);
-				nextPageButtonSprite = sb.makeInteractionObject(GLOBAL, PBS, nextPageButtonSprite);
-				navElement.appendChild(nextPageButtonElement);
+				if (bookConfig.nextPageButton) {
+					nextPageButtonElement = GLOBAL.document.createElement("div");
+		            nextPageButtonElement.id = "pbsNextPageButton";
+					nextPageButtonElement.className = "pbsPageButton";
+					// Create next button sprite
+					bookConfig.nextPageButton.parentElement = nextPageButtonElement;
+					bookConfig.nextPageButton.resource = resourceLoader.addToQueue(bookConfig.nextPageButton.url);
+					nextPageButtonSprite = sb.sprite(GLOBAL, PBS, bookConfig.nextPageButton);
+					nextPageButtonSprite = sb.makeInteractionObject(GLOBAL, PBS, nextPageButtonSprite);
+					navElement.appendChild(nextPageButtonElement);
+				}
 				
 				createResources();
 				
@@ -1130,7 +1157,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				pageTurnContainerElement.style["-ms-transition"] = "-ms-transform " + pageTurnDuration / 2 / 1000 + "s linear";
 				pageTurnContainerElement.style["-o-transition"] = "-o-transform " + pageTurnDuration / 2 / 1000 + "s linear";
 				
-				if (config.audio && config.audio && config.audio.name && config.audio.enabled !== "false") {
+				if (config.audio && config.audio && config.audio.name && config.audio.enabled !== false) {
 					audioPlayer = sb.audioPlayer(GLOBAL, PBS, config.audio.path + config.audio.name);
 				}
 				
@@ -1193,7 +1220,8 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 	};
 		
 	that.onOrientationChange = function () {
-
+		
+// TODO: Check if window.resize gets called on orientation change. If it is the following is unneccessary.
 		updateLayout();
 	};
 	

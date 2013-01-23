@@ -96,19 +96,6 @@ PBS.KIDS.storybook.audioPlayer = function (GLOBAL, PBS, src, options) {
 				} else {
 					return false;
 				}
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@				
-// TODO: Remove
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-				//audioElement.volume = 0;
-				
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-// Muted the audio player for the presentation
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 				
 				// Initialization was successful
 				return true;
