@@ -66,7 +66,7 @@ PBS.KIDS.storybook.config.pages.push({
 		},
 		{
 			type: "Cycler",
-			autoStart: true,
+			autoStart: false,
 			sound: {
 				startTime: 1,
 				endTime: 1.1,
@@ -80,6 +80,7 @@ PBS.KIDS.storybook.config.pages.push({
 					y: "316px",
 					numFrames: 12,
 					frameDelay: 6,
+					autoStart: false,
 					url: "images/tower-top-2.png"
 				},
 				{

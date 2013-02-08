@@ -42,7 +42,7 @@ PBS.KIDS.storybook.config = {
 		evenPageBackground: {
 			color: "#f9f9f9"
 		},
-		pageTurnDuration: 1000,
+		pageTurnDuration: 500,
 		pageSlideDuration: 200
 	},
 	cover: {

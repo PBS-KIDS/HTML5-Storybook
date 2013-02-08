@@ -232,6 +232,12 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 	// When the page starts turning to this page
 	that.navigationToBegin = function () {
 		
+		var i;
+		
+		// For each cycler on the page
+		for (i = 0; i < cyclerArray.length; i += 1) {	
+			cyclerArray[i].reset();
+		}
 	};
 	
 	// When the page is finished turning to this page
@@ -324,6 +330,20 @@ PBS.KIDS.storybook.page = function (GLOBAL, PBS, config, pageNum, options) {
 		for (i = 0; i < contentArray.length; i += 1) {
 			contentArray[i].render();
 		}
+	};
+	
+	that.quiet = function () {
+	
+		element.className = element.className.replace(" loud", "");
+		element.className = element.className.replace(" quiet", "");
+		element.className += " quiet";
+	};
+	
+	that.loud = function () {
+	
+		element.className = element.className.replace(" loud", "");
+		element.className = element.className.replace(" quiet", "");
+		element.className += " loud";
 	};
 	
 	that.init();

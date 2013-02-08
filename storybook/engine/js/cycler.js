@@ -10,6 +10,7 @@ PBS.KIDS.storybook.cycler = function (GLOBAL, PBS, options) {
 	var that = PBS.KIDS.storybook.eventDispatcher(),
 		initialized = false,
 		itemArray = [],
+		started = false,
 		activeIndex = 0, // Index of the item that is currently shown
 		
 		init = function () {
@@ -34,16 +35,52 @@ PBS.KIDS.storybook.cycler = function (GLOBAL, PBS, options) {
 						curItem = PBS.KIDS.storybook.sprite(GLOBAL, PBS, config);
 						curItem = PBS.KIDS.storybook.makeInteractionObject(GLOBAL, PBS, curItem);
 						curItem.addEventListener("PRESS", function(e) {
+						
 							that.dispatchEvent("PRESS", {
 								x: e.x, 
 								y: e.y
 							});
-							that.cycle();
+
+							if (started || !itemArray[0].isAnimation() || that.autoStart) {
+								that.cycle();
+							}
+							
+							updateAnimation();
+							updateVisibility();
+							
+							started = true;
 						});
+						
 						itemArray.push(curItem);
 					}
 				} else {
 					PBS.KIDS.storybook.error("Cycler missing content array.");
+				}
+			}
+		},
+		
+		updateVisibility = function () {
+		
+			var i;
+		
+			// Hide all items and show the active item
+			for (i = 0; i < itemArray.length; i += 1) {
+				itemArray[i].visible = (i === activeIndex);
+				itemArray[i].dirty = true;
+				itemArray[i].render();
+			}
+		},
+		
+		updateAnimation = function () {
+		
+			var i;
+		
+			// Reset all items and play the active item
+			for (i = 0; i < itemArray.length; i += 1) {
+				if (i === activeIndex) {
+					itemArray[i].play();
+				} else {	
+					itemArray[i].reset();
 				}
 			}
 		};
@@ -58,28 +95,18 @@ PBS.KIDS.storybook.cycler = function (GLOBAL, PBS, options) {
 	
 	// Display the next item in list
 	that.cycle = function () {
-	
+
 		var i;
-	
+		
 		// Increment the item index
 		if (activeIndex < itemArray.length - 1) {
 			activeIndex += 1;
 		} else {
 			activeIndex = 0;
-		}
+		}	
 		
-		// Hide all items and show the active item
-		for (i = 0; i < itemArray.length; i += 1) {
-			if (i === activeIndex) {
-				itemArray[i].visible = true;
-				itemArray[i].play();
-			} else {
-				itemArray[i].visible = false;
-				itemArray[i].reset();
-				itemArray[i].render();
-			}
-		}
-		
+		updateAnimation();
+		updateVisibility();
 	};
 	
 	// Play the active item
@@ -103,7 +130,10 @@ PBS.KIDS.storybook.cycler = function (GLOBAL, PBS, options) {
 	// Reset the active item
 	that.reset = function () {
 	
+		started = false;
+		activeIndex = 0;
 		itemArray[activeIndex].reset();
+		updateVisibility();
 	};
 	
 	// Update the active item

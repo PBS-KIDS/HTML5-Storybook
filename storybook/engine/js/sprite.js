@@ -124,9 +124,6 @@ PBS.KIDS.storybook.sprite = function (GLOBAL, PBS, options) {
 	spec.width = 99 + "px";
 	spec.height = 99 + "px";
 	spec.className = "pbsCanvas pbsSprite";
-	if (options.className) {
-		spec.className += " " + options.className;
-	}
 	if (options && options.className) {	
 		spec.className += " " + options.className
 	}
@@ -257,6 +254,11 @@ PBS.KIDS.storybook.sprite = function (GLOBAL, PBS, options) {
 		paused = false;
 	};
 	
+	that.isAnimation = function () {
+	
+		return (numFrames > 1);
+	};
+	
 	that.resume = function () {
 	
 		paused = false;
@@ -269,7 +271,7 @@ PBS.KIDS.storybook.sprite = function (GLOBAL, PBS, options) {
 	};
 	
 	that.reset = function () {
-	
+		
 		if (curFrame !== 0) {
 			curFrame = 0;
 			updateIndex = 0;

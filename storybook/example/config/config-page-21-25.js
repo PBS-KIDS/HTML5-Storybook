@@ -10,8 +10,7 @@ PBS.KIDS.storybook.config.pages.push({
 	},
 	sound: {
 		startTime: 0,
-		endTime: 10,
-		persist: false
+		endTime: 10
 	},
 	content: [
 		{
@@ -64,7 +63,7 @@ PBS.KIDS.storybook.config.pages.push({
 	sound: {
 		startTime: 31,
 		endTime: 74,
-		persist: false
+		persist: true
 	},
 	content: [
 		{

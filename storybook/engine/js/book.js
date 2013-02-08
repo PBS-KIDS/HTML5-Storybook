@@ -135,8 +135,18 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 			
 			// Play the right page sound if it exists
 			if (pages[rightPageIndex].pageSound) {
-				audioPlayer.play(pages[rightPageIndex].pageSound);	
+				loud();
+				audioPlayer.play(pages[rightPageIndex].pageSound);
+				audioPlayer.addEventListener("PLAY_COMPLETE", rightPageSoundComplete);
+			} else {
+				silent();
 			}
+		},
+		
+		// When the left page sound is done playing
+		rightPageSoundComplete = function () {
+			audioPlayer.removeEventListener("PLAY_COMPLETE", rightPageSoundComplete);
+			silent();
 		},
 		
 		// Hide ui elements on devices
@@ -210,6 +220,20 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 			// Set the page turn dimensions (add a pixel to width to ensure its larger)
 			pageTurnContainerElement.style.width = GLOBAL.parseInt(pageElementWidth, 10) + 1 + "px";
 			pageTurnContainerElement.style.height = pageElementHeight + "px";
+		},
+		
+		// Add a class of "loud" to the pages container
+		loud = function () {
+			pagesContainerElement.className = pagesContainerElement.className.replace(" loud", "");
+			pagesContainerElement.className = pagesContainerElement.className.replace(" silent", "");
+			pagesContainerElement.className += " loud";	
+		},
+		
+		// Add a class of "silent" to the pages container
+		silent = function () {
+			pagesContainerElement.className = pagesContainerElement.className.replace(" loud", "");
+			pagesContainerElement.className = pagesContainerElement.className.replace(" silent", "");
+			pagesContainerElement.className += " silent";	
 		},
 			
 		// Handles changes to the layout
@@ -426,15 +450,15 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 					// If the left page has sound
 					if (pages[leftPageIndex].pageSound) {
 						// Play the page sound
+						loud();
 						audioPlayer.play(pages[leftPageIndex].pageSound);
-						// If the right page has sound
-						if (pages[rightPageIndex].pageSound) {
-							audioPlayer.addEventListener("PLAY_COMPLETE", leftPageSoundComplete)
-						}
+						audioPlayer.addEventListener("PLAY_COMPLETE", leftPageSoundComplete)
 					// If the right page has sound
 					} else if (pages[rightPageIndex].pageSound) {
 						// Play the page sound
-						audioPlayer.play(pages[rightPageIndex].pageSound);
+						loud();
+						audioPlayer.play(pages[leftPageIndex].pageSound);
+						audioPlayer.addEventListener("PLAY_COMPLETE", rightPageSoundComplete);
 					}
 				}
 			}
@@ -466,6 +490,8 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 					}
 				}
 			}
+			
+			that.dispatchEvent("PAGE_CHANGE");
 			
 			navigating = false;
 		},
@@ -578,7 +604,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				return;
 			}
 			
-			sb.log("Navigate to page " + (pageIndex + 1));		
+			sb.log("Navigate to page " + (pageIndex + 1));
 				
 			// If no previous page indices or duration is zero then do not animate
 			if (curLeftPageIndex === undefined || curRightPageIndex === undefined || pageTurnDuration === 0) {
@@ -651,6 +677,14 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				}
 			}
 
+			// Call navigation start methods
+			if (pages[leftPageIndex]) {
+				pages[leftPageIndex].navigationToBegin();
+			}
+			if (pages[rightPageIndex]) {
+				pages[rightPageIndex].navigationToBegin();
+			}
+			
 			if (doNotAnimate) {
 				// If the current page is the cover
 				if (targetPageIndex === -1) {
@@ -744,7 +778,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 						
 						pageTurnContainerElement.style.display = "block";
 						
-						updatePosition2();
+						GLOBAL.setTimeout(updatePosition2, 500);
 						
 						navigating = true;
 						GLOBAL.setTimeout(onNavigateMiddle, pageTurnDuration / 2);
@@ -811,7 +845,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 						
 						pageTurnContainerElement.style.display = "block";
 						
-						updatePosition2();
+						GLOBAL.setTimeout(updatePosition2, 500);
 						
 						navigating = true;
 						GLOBAL.setTimeout(onNavigateMiddle, pageTurnDuration / 2);
@@ -825,10 +859,20 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		// When all pages have loaded all resources
 		start = function () {
 		
+			var i;
+			
+			// Initially render all the pages so they are ready to be displayed
+			for (i = 0; i < pages.length; i += 1) {
+				cover.render();
+				pages[i].render();
+			}
+		
 			storybookContainerElement.innerHTML = "";
 			// Add elements to book elements
 			storybookContainerElement.appendChild(bookWrapperElement);
 			storybookContainerElement.appendChild(navElement);
+			
+			
 
 			// Listen for changes to layout
 			GLOBAL.onorientationchange = that.onOrientationChange;
@@ -863,6 +907,8 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				nextPageButtonSprite.render();
 				nextPageButtonSprite.addEventListener("PRESS", that.nextPage);
 			}
+			
+			that.dispatchEvent("STARTED");
 			
 			loop();
 		},
@@ -1043,6 +1089,8 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 			
 			resourceLoadComplete = true;
 			
+			that.dispatchEvent("LOADED");
+			
 			if (!audioPlayer || audioLoadedEnough === true) {
 				start();
 			}
@@ -1163,7 +1211,8 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				
 				// Create cover
 				cover = sb.page(GLOBAL, PBS, config.cover, 0, {
-					bookConfig: bookConfig
+					bookConfig: bookConfig,
+					audioPlayer: audioPlayer
 				});
 				
 				// Add cover listeners

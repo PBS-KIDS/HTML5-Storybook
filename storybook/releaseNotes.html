@@ -28,6 +28,115 @@
 	
 	<h1>PBS Storybook Engine Release Notes</h1>
 	
+	<h2>RC2 0.024</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>N/A</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>N/A</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>N/A</p>
+		</div>
+	</article>
+	
+	<h2>RC2 0.023</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Book now dispatches <var>STARTED</var> and <var>LOADED</var> events.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>N/A</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>Fixed an issue where pages were blank for a moment when first navigating to them</p>
+			<p>Fixed an issue where the left page sound was playing twice instead of the the left page sound followed by the right page sound</p>
+			<p>Fixed an issue where sprites put two duplicate class names identifying the sprite.</p>
+		</div>
+	</article>
+	
+	<h2>RC2 0.022</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>N/A</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>Added a delay to single-page layout when navigating so the page will wait a moment after the page turn starts to move the book into its new position.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>N/A</p>
+		</div>
+	</article>
+	
+	<h2>RC2 0.021</h2>
+	
+	<article>
+		<h3>New Features</h3>
+		
+		<div class="content">
+			<p>Pages now have a class name of "loud" when playing a page sound and "quiet" otherwise.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Technical</h3>
+		
+		<div class="content">
+			<p>Set the <var>dirty</var> property of a sprite when changing its visibility in the cycle method of cycler.js.</p>
+		</div>
+	</article>
+	
+	<article>
+		<h3>Fixed Issues</h3>
+
+		<div class="content">
+			<p>Fixed an issue where a cycler would not clear when its children where sprites with only one frame.</p>
+			<p>The audio player was not being passed into the cover and causing audio not to play on the cover.</p>
+			<p>Fixed an issue where the cycler would not start paused even if the <var>autoStart</var> was false.</p>
+			<p>Reset cyclers on page <var>navigationToBegin</var> event instead of after the page was flipped.</p>
+		</div>
+	</article>
+	
 	<h2>Beta 0.020</h2>
 	
 	<article>
