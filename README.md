@@ -3,6 +3,9 @@ HTML5-Storybook
 
 The PBS KIDS HTML5 Storybook Engine allows users to rapidly develop cross-platform interactive storybooks with animations and audio.
 
+Get started with the [Documentation](https://github.com/PBS-KIDS/HTML5-Storybook/wiki)
+
+
 Some examples of stories developed with the engine are:
 
 Daniel Tiger's [Something Special For Dad](http://pbskids.org/daniel/stories/something-special-for-dad/)
