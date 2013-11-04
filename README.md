@@ -17,7 +17,7 @@ PBS KIDS [Writer's Contest](http://pbskids.org/writerscontest/read-stories)
 
 
 
-The engine was developed in 2012-2013 for PBS KIDS by [William Malone](http://willaimmalone.com).
+The engine was developed in 2012-2013 for PBS KIDS by [William Malone](http://williammalone.com).
 
 This engine is free to use (see license.txt), all assets in the example book are (c) William Malone.
 
