@@ -17,6 +17,8 @@ Get started with the [Documentation](https://github.com/PBS-KIDS/HTML5-Storybook
 
 Some examples of stories developed with the engine are:
 
+Word Girl [Storybook Adventure](http://pbskids.org/wordgirl/games/storybookadventure/)
+
 Daniel Tiger's [Something Special For Dad](http://pbskids.org/daniel/stories/something-special-for-dad/)
 
 PBS KIDS [Writer's Contest](http://pbskids.org/writerscontest/read-stories)
