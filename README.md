@@ -15,7 +15,7 @@ Key Features:
 Get started with the [Documentation](https://github.com/PBS-KIDS/HTML5-Storybook/wiki)
 
 
-Some examples of stories developed with the engine are:
+##Examples
 
 Word Girl [Storybook Adventure](http://pbskids.org/wordgirl/games/storybookadventure/)
 
