@@ -102,7 +102,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		pageDraggedLeft = function (page) {
 		
 			// If the page dragged is the right page or the cover
-			if (page === pages[rightPageIndex] || (page === cover && bookConfig.direction === "ltr")) {
+			if (page === pages[rightPageIndex] || (page === cover && bookConfig.direction !== "rtl")) {
 				that.nextPage();
 			} else {
 				if (curOrientation === "SINGLE-PAGE") {
