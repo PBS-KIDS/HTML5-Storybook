@@ -4,11 +4,12 @@ HTML5-Storybook
 The PBS KIDS HTML5 Storybook Engine allows users to rapidly develop cross-platform interactive storybooks with animations and audio.
 
 Key Features:
-* Uses a mixture of DOM and Canvas elements to allow responsive images, text ad animaitons.
+* Uses a mixture of DOM and Canvas elements to allow responsive images, text
+and animations.
 * Sprite based animations
 * Audio sprites for mobile audio
 * Cross platform
-* Lightwieght 
+* Lightweight 
 * Touch responsive (swipe to turn pages)
 * Drawing tools for kids books
 
