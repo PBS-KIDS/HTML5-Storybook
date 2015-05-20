@@ -1,0 +1,32 @@
+{
+	"name": "HTML5-Storybook",
+	"version": "1.0.0",
+	"description": "The PBS KIDS HTML5 Storybook Engine allows users to rapidly develop cross-platform interactive storybooks with animations and audio.",
+	"url": "https://github.com/PBS-KIDS/HTML5-Storybook",
+	"output": "html5-storybook",
+	"main": [
+		"src/js/pbs.js",
+        "src/js/eventDispatcher.js",
+        "src/js/interaction.js",
+        "src/js/resourceLoader.js",
+	    "src/js/book.js",
+	    "src/js/page.js",
+	    "src/js/textArea.js",
+	    "src/js/view.js",
+        "src/js/sprite.js",
+        "src/js/cycler.js",
+        "src/js/drawingPad.js",
+        "src/js/audioPlayer.js",
+        "src/js/sound.js",
+        "src/js/audible.js",
+        "src/less/engine.less"
+	],
+	"modules": {
+		"canvasdrawing": {
+			"output": "html5-drawing-canvas",
+			"main": [
+				"src/modules/html5-drawing-canvas.js"
+			]
+		}		
+	}
+}

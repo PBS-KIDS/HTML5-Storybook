@@ -1,0 +1,28 @@
+{
+	"name": "html5-storybook",
+	"version": "1.0.0",
+	"main": "dist/html5-storybook.min.js",
+	"dependencies": {
+	},
+	"devDependencies": {
+		"qunit": "*",
+		"google-code-prettify": "*",
+		"bind-polyfill": "*"
+	},
+	"ignore": [
+		"Gruntfile.js",
+		"tasks",
+		"examples",
+		"docs",
+		"src",
+		"test",
+		"tools",
+		".bowerrc",
+		".editorconfig",
+		".travis.yml",
+		".gitattributes",
+		"library.json",
+		"package.json",
+		".gitignore"
+	]
+}
