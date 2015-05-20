@@ -102,7 +102,7 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		pageDraggedLeft = function (page) {
 		
 			// If the page dragged is the right page or the cover
-			if (page === pages[rightPageIndex] || page === cover) {
+			if (page === pages[rightPageIndex] || (page === cover && bookConfig.direction !== "rtl")) {
 				that.nextPage();
 			} else {
 				if (curOrientation === "SINGLE-PAGE") {
@@ -116,15 +116,19 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		// Handle drag on a page to the right
 		pageDraggedRight = function (page) {
 			
-			// If the page dragged is the left page
+			// If the page dragged is the left page or the cover
 			if (page === pages[leftPageIndex]) {	
 				that.previousPage();
 			} else {
-				if (curOrientation === "SINGLE-PAGE") {
-					that.previousPage();
+				if (page === cover && bookConfig.direction === "rtl") {
+					that.gotoPage(0);
+				} else {
+					if (curOrientation === "SINGLE-PAGE") {
+						that.previousPage();
+					}
+					// If the right page is dragged right in two-page layout then do nothing
+					//     because it would do nothing on a real book
 				}
-				// If the right page is dragged right in two-page layout then do nothing
-				//     because it would do nothing on a real book
 			}
 		},
 		
@@ -463,30 +467,61 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 				}
 			}
 			
-			// If the current page is the cover
-			if (targetPageIndex === -1) {
-				// Turn off the previous page button
-				if (prevPageButtonElement) {
-					prevPageButtonElement.style.display = "none";
-				}
-				if (nextPageButtonElement) {
-					nextPageButtonElement.style.display = "block";	
-				}
-			} else {
-				// Hide page navigation buttons when at the beginning and end
-				if (curOrientation === "SINGLE-PAGE") {
+			// hide previous and next page buttons when unnecessary
+			if (bookConfig.direction === "rtl") {
+				// If the current page is the cover
+				if (targetPageIndex === -1) {
+					// Turn off the next page button
 					if (prevPageButtonElement) {
-						prevPageButtonElement.style.display = (targetPageIndex === -1) ? "none" : "block";
+						prevPageButtonElement.style.display = "block";
 					}
 					if (nextPageButtonElement) {
-						nextPageButtonElement.style.display = (targetPageIndex === pages.length - 1) ? "none" : "block";
+						nextPageButtonElement.style.display = "none";	
 					}
 				} else {
+					// Hide page navigation buttons when at the beginning and end
+					if (curOrientation === "SINGLE-PAGE") {
+						if (prevPageButtonElement) {
+							prevPageButtonElement.style.display = (targetPageIndex === 0) ? "none" : "block";
+						}
+						if (nextPageButtonElement) {
+							nextPageButtonElement.style.display = (targetPageIndex === - 1) ? "none" : "block";
+						}
+					} else {
+						if (prevPageButtonElement) {
+							prevPageButtonElement.style.display = (leftPageIndex === 0) ? "none" : "block";
+						}
+						if (nextPageButtonElement) {
+							nextPageButtonElement.style.display = (targetPageIndex === - 1) ? "none" : "block";
+						}
+					}
+				}
+			} else {
+				// If the current page is the cover
+				if (targetPageIndex === -1) {
+					// Turn off the previous page button
 					if (prevPageButtonElement) {
-						prevPageButtonElement.style.display = (leftPageIndex === -1) ? "none" : "block";
+						prevPageButtonElement.style.display = "none";
 					}
 					if (nextPageButtonElement) {
-						nextPageButtonElement.style.display = (rightPageIndex === pages.length - 1) ? "none" : "block";
+						nextPageButtonElement.style.display = "block";	
+					}
+				} else {
+					// Hide page navigation buttons when at the beginning and end
+					if (curOrientation === "SINGLE-PAGE") {
+						if (prevPageButtonElement) {
+							prevPageButtonElement.style.display = (targetPageIndex === -1) ? "none" : "block";
+						}
+						if (nextPageButtonElement) {
+							nextPageButtonElement.style.display = (targetPageIndex === pages.length - 1) ? "none" : "block";
+						}
+					} else {
+						if (prevPageButtonElement) {
+							prevPageButtonElement.style.display = (leftPageIndex === -1) ? "none" : "block";
+						}
+						if (nextPageButtonElement) {
+							nextPageButtonElement.style.display = (rightPageIndex === pages.length - 1) ? "none" : "block";
+						}
 					}
 				}
 			}
@@ -861,6 +896,8 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		
 			var i;
 			
+			
+			
 			// Initially render all the pages so they are ready to be displayed
 			for (i = 0; i < pages.length; i += 1) {
 				cover.render();
@@ -1209,15 +1246,26 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 					audioPlayer = sb.audioPlayer(GLOBAL, PBS, config.audio.path + config.audio.name);
 				}
 				
+				// book defaults to left-to-right
+				if (typeof bookConfig.direction === "undefined" || !bookConfig.direction) {
+					bookConfig.direction = "ltr";
+				}
+				
+				if (bookConfig.direction === "rtl") {
+					config.pages.reverse();
+					
+					if (typeof bookConfig.startOnPage === "undefined" || isNaN(bookConfig.startOnPage) || bookConfig.startOnPage <= 0) {
+						bookConfig.startOnPage = 0;
+					} else {
+						bookConfig.startOnPage = config.pages.length - bookConfig.startOnPage;
+					}
+				}
+				
 				// Create cover
 				cover = sb.page(GLOBAL, PBS, config.cover, 0, {
 					bookConfig: bookConfig,
 					audioPlayer: audioPlayer
 				});
-				
-				// Add cover listeners
-				cover.addEventListener("DRAG_LEFT", pageDraggedLeft);
-				cover.addEventListener("DRAG_RIGHT", pageDraggedRight);
 		
 				// Create the storybook pages
 				for (i = 0; i < config.pages.length; i += 1) {
@@ -1236,6 +1284,10 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 						audioPlayer: audioPlayer
 					});
 				}
+				
+				// Add cover listeners
+				cover.addEventListener("DRAG_LEFT", pageDraggedLeft);
+				cover.addEventListener("DRAG_RIGHT", pageDraggedRight);
 				
 				// Add page listeners
 				for (i = 0; i < pages.length; i += 1) {
@@ -1315,6 +1367,11 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 		// If the target page is valid
 		if (targetPageIndex < pages.length) {
 			navigateToPageIndex(targetPageIndex);
+		} else {
+			if (bookConfig.direction === "rtl") {
+				targetPageIndex = -1;
+				navigateToPageIndex(targetPageIndex);
+			}
 		}
 	};
 	
@@ -1333,6 +1390,19 @@ PBS.KIDS.storybook.book = function (GLOBAL, PBS, storybookContainerElement, conf
 			} else {
 				// Go back one page
 				targetPageIndex = curPageIndex - 1;
+			}
+		}
+		
+		if (bookConfig.direction === "rtl") {
+			if (targetPageIndex <= -2) {
+				// from cover (-1) to first RTL page (last in pages array)
+				targetPageIndex = pages.length - 1;
+			} else {
+				if (targetPageIndex === -1) {
+					// reject turning page before last RTL page
+					targetPageIndex  = curPageIndex;
+					return;
+				}
 			}
 		}
 	
