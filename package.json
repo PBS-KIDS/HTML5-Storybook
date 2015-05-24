@@ -1,0 +1,11 @@
+{
+	"private": true,
+	"version": "1.0.0",
+	"dependencies": {
+		"grunt": "*",
+		"library-grunt": "*"
+	},
+	"scripts": {
+		"test": "grunt default test --verbose"
+	}
+}
